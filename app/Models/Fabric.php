@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Model
+class Fabric extends Model
 {
-    protected $table = "users";
+    protected $table = "fabrics";
     protected $primaryKey = "id";
     protected $keyType = "int";
     public $timestamps = true;
     public $incrementing = true;
 
-    public function addresses(): HasMany {
-        return $this->hasMany(Address::class, "user_id", "id");
+    public function productVariants(): HasMany {
+        return $this->hasMany(ProductVariant::class, "fabric_id", "id");
     }
-
 }
