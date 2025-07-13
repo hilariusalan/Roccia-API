@@ -14,6 +14,20 @@ class Address extends Model
     public $incrementing = true;
     public $timestamps = true;
 
+    protected $fillable = [
+        'is_default',
+        'first_name',
+        'last_name',
+        'address',
+        'appartment_suite',
+        'city',
+        'province',
+        'postal_code',
+        'country',
+        'country',
+        'user_id'
+    ];
+
     public function users(): BelongsTo {
         return $this->belongsTo(Address::class, "user_id", "id");
     }

@@ -14,6 +14,10 @@ class Type extends Model
     public $timestamps = true;
     public $incrementing = true;
 
+    protected $fillable = [
+        'name'
+    ];
+
     public function products(): HasMany {
         return $this->hasMany(Product::class, "type_id", "id");
     }
