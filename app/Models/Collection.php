@@ -14,6 +14,11 @@ class Collection extends Model
     public $timestamps = true;
     public $incrementing = true;
 
+    protected $fillable = [
+        'name', 
+        'slug'
+    ];
+    
     public function products(): HasMany {
         return $this->hasMany(Product::class, "collection_id", "id");
     }

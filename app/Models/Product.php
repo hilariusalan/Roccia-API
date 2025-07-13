@@ -15,6 +15,15 @@ class Product extends Model
     public $timestamps = true;
     public $incrementing = true;
 
+    protected $fillable = [
+        'name',
+        'slug',
+        'price',
+        'description',
+        'collection_id',
+        'type_id'
+    ];
+
     public function productUsageImages(): HasMany {
         return $this->hasMany(ProductUsageImage::class, "product_id", "id");
     }

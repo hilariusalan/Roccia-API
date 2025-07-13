@@ -14,6 +14,11 @@ class ProductUsageImage extends Model
     public $timestamps = true;
     public $incrementing = true;
 
+    protected $fillable = [
+        'product_id',
+        'image_url'
+    ];
+
     public function products(): BelongsTo {
         return $this->belongsTo(ProductUsageImage::class, "product_id", "id");
     }

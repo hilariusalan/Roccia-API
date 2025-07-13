@@ -36,7 +36,7 @@ class AddressController extends Controller
 
         if(!$userAddresses) {
             throw new HttpResponseException(response()->json([
-                'message' => 'Address is empty.'
+                'error' => 'Address is empty.'
             ], 404));
         }
 
@@ -52,7 +52,7 @@ class AddressController extends Controller
 
         if(!$userAddress) {
             throw new HttpResponseException(response()->json([
-                'message' => 'Address is empty.'
+                'error' => 'Address not found.'
             ])->setStatusCode(404));
         }
 
@@ -73,7 +73,7 @@ class AddressController extends Controller
 
         if(!$userAddress) {
             throw new HttpResponseException(response()->json([
-                'message' => 'Address is empty.'
+                'error' => 'Address not found.'
             ])->setStatusCode(404));
         }
 
