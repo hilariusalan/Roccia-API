@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CollectionCreateRequest;
+use App\Http\Requests\CollectionUpdateRequest;
 use App\Http\Resources\CollectionResource;
 use App\Models\Collection;
 use App\Models\Product;
@@ -19,7 +20,7 @@ class CollectionController extends Controller
 
         $decayMinutes = 1;
         $maxAttemps = 3;
-        $key = 'create-address: ' . $user->email;
+        $key = 'create-collection: ' . $user->email;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
             $second = RateLimiter::availableIn($key);

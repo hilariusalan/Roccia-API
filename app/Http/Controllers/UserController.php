@@ -116,7 +116,7 @@ class UserController extends Controller
 
         $decayMinutes = 1;
         $maxAttemps = 3;
-        $key = 'update-address: ' . $user->email;
+        $key = 'update-user: ' . $user->email;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
             $second = RateLimiter::availableIn($key);
