@@ -25,15 +25,14 @@ class UserController extends Controller
 
         $decayMinutes = 1;
         $maxAttemps = 3;
-
         $key = 'send-otp: ' . $data->email;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
             $second = RateLimiter::availableIn($key);
 
-            return response()->json([
+            throw new HttpResponseException(response()->json([
                 'error' => 'Too many otp request. Please try again after ' . $second . ' second' 
-            ])->setStatusCode(429);
+            ])->setStatusCode(429));
         }
 
         RateLimiter::hit($key, $decayMinutes * 60);
@@ -59,15 +58,14 @@ class UserController extends Controller
 
         $decayMinutes = 1;
         $maxAttemps = 3;
-
         $key = 'verify-otp: ' . $data->email;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
             $second = RateLimiter::availableIn($key);
 
-            return response()->json([
-                'error' => 'Too many verification attempt. Please try again after ' . $second . ' second'
-            ])->setStatusCode(429);
+            throw new HttpResponseException(response()->json([
+                'error' => 'Too many verification attemps. Please try again after ' . $second . ' second'
+            ])->setStatusCode(429));
         }
 
         $otpRecord = OtpCode::where('email', $data->email)
@@ -78,9 +76,9 @@ class UserController extends Controller
         if (!$otpRecord || !Hash::check((string)$data->otp, $otpRecord->otp)) {
             RateLimiter::hit($key, $decayMinutes * 60);
 
-            return response()->json([
+            throw new HttpResponseException(response()->json([
                 'message' => 'Otp is not valid.'
-            ]);
+            ])->setStatusCode(403));
         }
 
         RateLimiter::clear($key);
@@ -116,13 +114,28 @@ class UserController extends Controller
     public function updateUser(UserUpdateRequest $request): JsonResponse {
         $user = Auth::user();
 
-        $userData = User::where('id', $user->id)->first();
+        $decayMinutes = 1;
+        $maxAttemps = 3;
+        $key = 'update-address: ' . $user->email;
 
+        if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
+            $second = RateLimiter::availableIn($key);
+
+            throw new HttpResponseException(response()->json([
+                'error' => 'Too many attemps. Please try again after ' . $second . ' second'
+            ])->setStatusCode(429));
+        }
+
+        $userData = User::where('id', $user->id)->first();
         if (!$userData) {
+            RateLimiter::hit($key, $decayMinutes * 60);
+
             throw new HttpResponseException(response()->json([
                 'error' => 'User not found.' 
             ])->setStatusCode(404));
         }
+
+        RateLimiter::clear($key);
 
         $data = $request->validated();
         $userData->fill($data);

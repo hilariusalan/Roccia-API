@@ -11,14 +11,28 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AddressController extends Controller
 {
     public function createAddress(AddressCreateRequest $request): JsonResponse {
-        $data = $request->validated();
-
         $user = Auth::user();
 
+        $decayMinutes = 1;
+        $maxAttemps = 3;
+        $key = 'create-address: ' . $user->email;
+
+        if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
+            $second = RateLimiter::availableIn($key);
+
+            throw new HttpResponseException(response()->json([
+                'error' => 'Too many attemps. Please try again after ' . $second . ' second'
+            ]));
+        }
+
+        RateLimiter::hit($key, $decayMinutes * 60);
+
+        $data = $request->validated();
         $address = new Address($data);
         $address->user_id = $user->id;
         $address->save();
@@ -33,7 +47,6 @@ class AddressController extends Controller
         $user = Auth::user();
 
         $userAddresses = Address::where('user_id', $user->id)->get();
-
         if(!$userAddresses) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Address is empty.'
@@ -48,13 +61,28 @@ class AddressController extends Controller
     public function updateUserAddress(int $id, AddressUpdateRequest $request): JsonResponse {
         $user = Auth::user();
 
-        $userAddress = Address::where('id', $id)->where('user_id', $user->id)->first();
+        $decayMinutes = 1;
+        $maxAttemps = 3;
+        $key = 'update-address: ' . $user->email;
 
+        if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
+            $second = RateLimiter::availableIn($key);
+
+            throw new HttpResponseException(response()->json([
+                'error' => 'Too many attemps. Please try again after ' . $second . ' second'
+            ])->setStatusCode(429));
+        }
+
+        $userAddress = Address::where('id', $id)->where('user_id', $user->id)->first();
         if(!$userAddress) {
+            RateLimiter::hit($key, $decayMinutes * 60);
+
             throw new HttpResponseException(response()->json([
                 'error' => 'Address not found.'
             ])->setStatusCode(404));
         }
+
+        RateLimiter::clear($key);
 
         $data = $request->validated();
         $userAddress->fill($data);
@@ -70,7 +98,6 @@ class AddressController extends Controller
         $user = Auth::user();
 
         $userAddress = Address::where('id', $id)->where('user_id', $user->id)->first();
-
         if(!$userAddress) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Address not found.'

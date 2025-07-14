@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\NameController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
@@ -24,28 +25,54 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('/auth/request-otp', [UserController::class, 'userRequestOtp']);
-Route::post('/auth/verify-otp', [UserController::class, 'userVerifyOtp']);
-
-Route::middleware(['auth:api'])->group(function() {
-    Route::get('/users', [UserController::class, 'getUserData']);
-    Route::put('/users/update', [UserController::class, 'updateUser']);
-    Route::delete('/logout', [UserController::class, 'logoutUser']);
-
-    Route::get('/users/addresses', [AddressController::class, 'getUserAddress']);
-    Route::post('/users/address/create', [AddressController::class, 'createAddress']);
-    Route::put('/users/address/{addressId}/edit', [AddressController::class, 'updateUserAddress'])->where('addressId', '[0-9]+');
-    Route::delete('/users/address/{addressId}/delete', [AddressController::class, 'deleteUserAddress'])->where('addressId', '[0-9]+');
-
-    Route::middleware(['is_admin'])->group(function() {
-        // add some route here
-    });
+Route::controller(UserController::class)->group(function() {
+    Route::post('/auth/request-otp', 'userRequestOtp');
+    Route::post('/auth/verify-otp', 'userVerifyOtp');
 });
 
-// perlu pembenaran
-Route::post('/products', [ProductController::class, 'createProduct']);
-Route::get('/products', [ProductController::class, 'getProducts']);
+Route::controller(ProductController::class)->group(function() {
+    Route::get('/products', 'getProducts');
+    Route::get('/collections/{collectionId}/products', 'getProductsPerCollection')->where('collectionId', '[0-9]+');
+});
+
+Route::controller(CollectionController::class)->group(function() {
+    Route::get('/collections', 'getCollections');
+});
+
+Route::controller(TypeController::class)->group(function() {
+    Route::post('/products/types/create', 'createType');
+    Route::get('/products/types', 'getTypes');
+});
+
 Route::get('/names', [NameController::class, 'getAllProductCollectionNames']);
-Route::post('/products/types', [TypeController::class, 'createType']);
-Route::get('/products/types', [TypeController::class, 'getTypes']);
 Route::get('/colors', [ColorResource::class, 'getColors']);
+
+Route::middleware(['auth:api'])->group(function() {
+    Route::controller(UserController::class)->group(function() {
+        Route::get('/users', 'getUserData');
+        Route::put('/users/update', 'updateUser');
+        Route::delete('/logout', 'logoutUser');
+    });
+
+    Route::controller(AddressController::class)->group(function() {
+        Route::get('/users/addresses', 'getUserAddress');
+        Route::post('/users/address/create', 'createAddress');
+        Route::put('/users/address/{addressId}/edit', 'updateUserAddress')->where('addressId', '[0-9]+');
+        Route::delete('/users/address/{addressId}/delete', 'deleteUserAddress')->where('addressId', '[0-9]+'); 
+    });
+
+    Route::middleware(['is_admin'])->group(function() {
+        Route::controller(ProductController::class)->group(function() {
+            Route::post('/products/create', 'createProduct');
+            Route::put('/products/{productId}/update', 'updateProduct')->where('productId', '[0-9]+');
+            Route::delete('/products/{productId}/delete', 'deleteProduct')->where('productId', '[0-9]+');
+        });
+
+        Route::controller(CollectionController::class)->group(function() {
+            Route::post('/collections/create', 'createCollection');
+            Route::put('/collections/{collectionId}/update', 'updateCollection')->where('collectionId', '[0-9]+');
+            Route::delete('/collections/{collectionId}/delete', 'deleteCollection')->where('collectionId', '[0-9]+');
+        });
+
+    });
+});
