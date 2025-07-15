@@ -23,6 +23,10 @@ class Order extends Model
         return $this->hasMany(Payment::class, "order_id", "id");
     }
 
+    public function users(): BelongsTo {
+        return $this->belongsTo(Order::class, 'user_id', 'id');
+    }
+
     public function shippingAdresses(): BelongsTo {
         return $this->belongsTo(Address::class, "shipping_address_id", "id");
     }

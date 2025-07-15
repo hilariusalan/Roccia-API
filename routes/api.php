@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\NameController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
@@ -35,15 +36,17 @@ Route::controller(ProductController::class)->group(function() {
     Route::get('/collections/{collectionId}/products', 'getProductsPerCollection')->where('collectionId', '[0-9]+');
 });
 
-Route::controller(CollectionController::class)->group(function() {
-    Route::get('/collections', 'getCollections');
-});
-
 Route::controller(TypeController::class)->group(function() {
     Route::post('/products/types/create', 'createType');
     Route::get('/products/types', 'getTypes');
 });
 
+Route::controller(OrderController::class)->group(function() {
+    Route::get('/users/orders', 'getUserOrders');
+    Route::get('/orders/{orderId}', 'getOrderDetail')->where('orderId', '[0-9]+');
+});
+
+Route::get('/collections', [CollectionController::class, 'getCollections']);
 Route::get('/names', [NameController::class, 'getAllProductCollectionNames']);
 Route::get('/colors', [ColorResource::class, 'getColors']);
 
@@ -72,6 +75,10 @@ Route::middleware(['auth:api'])->group(function() {
             Route::post('/collections/create', 'createCollection');
             Route::put('/collections/{collectionId}/update', 'updateCollection')->where('collectionId', '[0-9]+');
             Route::delete('/collections/{collectionId}/delete', 'deleteCollection')->where('collectionId', '[0-9]+');
+        });
+
+        Route::controller(OrderController::class)->group(function() {
+            Route::get('/orders', 'getOrders');
         });
 
     });

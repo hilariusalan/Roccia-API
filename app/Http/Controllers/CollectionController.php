@@ -83,7 +83,12 @@ class CollectionController extends Controller
 
         return response()->json([
             'message' => 'Collection updated successfully.',
-            'data' => new CollectionResource($collection)
+            'data' => [
+                'id' => $collection->id,
+                'name' => $collection->name,
+                'slug' => $collection->slug,
+                'updated_at' => $collection->updated_at->format('d-M-y')
+            ]
         ])->setStatusCode(200);
     }
 

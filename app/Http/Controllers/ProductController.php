@@ -111,7 +111,7 @@ class ProductController extends Controller
             'types', 
             'productUsageImages',
             'productVariants.color'
-        ])->where('collection_id', $collectionId);;
+        ])->where('collection_id', $collectionId);
 
         if($minPrice && $maxPrice != null) {
             $query->where('price', '>=', $minPrice)->where('price', '<=', $maxPrice);
@@ -199,7 +199,17 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product updated successfully.',
-            'data' => new ProductResource($data)
+            'data' => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'collection' => $product->collections->name, 
+                'type' => $product->types->name , 
+                'slug' => $product->slug,
+                'price' => (int)$product->price,
+                'description' => $product->description,
+                'image_url' => $product->productUsageImages->image_url,
+                'updated_at' => $product->updated_at->format('d-m-Y'),  
+            ]
         ])->setStatusCode(200);
     }
 

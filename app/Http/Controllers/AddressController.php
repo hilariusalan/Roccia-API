@@ -33,6 +33,13 @@ class AddressController extends Controller
         RateLimiter::hit($key, $decayMinutes * 60);
 
         $data = $request->validated();
+
+        if (Address::where('is_default', $data['is_default'])->count() == 1) {
+            throw new HttpResponseException(response()->json([
+                'error' => 'Just allowed one default address.'
+            ]));
+        }
+
         $address = new Address($data);
         $address->user_id = $user->id;
         $address->save();
@@ -85,12 +92,31 @@ class AddressController extends Controller
         RateLimiter::clear($key);
 
         $data = $request->validated();
+
+        if (Address::where('is_default', $data['is_default'])->count() == 1) {
+            throw new HttpResponseException(response()->json([
+                'error' => 'Just allowed one default address.'
+            ]));
+        }
+
         $userAddress->fill($data);
         $userAddress->save();
 
         return response()->json([
             'message' => 'Address updated successfully.',
-            'data' => new AddressResource($userAddress)
+            'data' => [
+                'id' => $userAddress->id,
+                'is_default' => $userAddress->is_default,
+                'first_name' => $userAddress->first_name,
+                'last_name' => $userAddress->last_name,
+                'address' => $userAddress->address,
+                'appartment_suite' => $userAddress->appartment_suite,
+                'city' => $userAddress->city,
+                'province' => $userAddress->province,
+                'postal_code' => $userAddress->postal_code,
+                'country' => $userAddress->country,
+                'updated_at' => $userAddress->updated_at->format('d-M-Y')
+            ]
         ])->setStatusCode(200);
     }
 

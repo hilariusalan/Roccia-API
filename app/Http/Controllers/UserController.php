@@ -143,7 +143,13 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Full Name updated successfully.',
-            'data' => new UserResource($userData)
+            'data' => [
+                'id' => $userData->id,
+                'email' => $userData->email,
+                'full_name' => $userData->full_name,
+                'is_admin' => $userData->is_admin,
+                'updated_at' => $userData->updated_at
+            ]
         ])->setStatusCode(200);
     }
 
