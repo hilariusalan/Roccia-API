@@ -55,21 +55,87 @@ class ProductController extends Controller
         ])->setStatusCode(201);
     }
 
-    public function getProducts(): JsonResponse {
-        $products = Product::with(['collections', 'types', 'productUsageImages'])->get();
+    public function getProducts(Request $request): JsonResponse {
+        $size = $request->query('size', 4);
+        $page = $request->query('page', 1);
+
+        $minPrice = $request->query('min_price');
+        $maxPrice = $request->query('max_price');
+        $typeId = $request->query('type_id');
+        $colorId = $request->query('color_id');
+        
+        $query = Product::query()->with([
+            'collections', 
+            'types', 
+            'productUsageImages',
+            'productVariants.color'
+        ]);
+
+        if($minPrice && $maxPrice != null) {
+            $query->where('price', '>=', $minPrice)->where('price', '<=', $maxPrice);
+        }
+
+        if($typeId != null) {
+            $query->where('type_id', $typeId);
+        }
+
+        if($colorId != null) {
+            $query->whereHas('productVariants', function ($q) use ($colorId) {
+                $q->where('colorId', $colorId);
+            });
+        }
+
+        $products = $query->paginate($size, ['*'], 'page', $page);
 
         return response()->json([
-            'data' => ProductResource::collection($products)
+            'data' => ProductResource::collection($products->items()),
+            'pagination' => [
+                'page' => $products->currentPage(),
+                'size' => $products->perPage(),
+                'total_pages' => $products->lastPage()
+            ]
         ])->setStatusCode(200);
     }
 
-    public function getProductsPerCollection(int $collectionId): JsonResponse {
-        $products = Product::with(['collections', 'types', 'productUsageImages'])
-                            ->where('collection_id', $collectionId)
-                            ->get();
+    public function getProductsPerCollection(int $collectionId, Request $request): JsonResponse {
+        $size = $request->query('size', 4);
+        $page = $request->query('page', 1);
+
+        $minPrice = $request->query('min_price');
+        $maxPrice = $request->query('max_price');
+        $typeId = $request->query('type_id');
+        $colorId = $request->query('color_id');
+
+        $query = Product::query()->with([
+            'collections', 
+            'types', 
+            'productUsageImages',
+            'productVariants.color'
+        ])->where('collection_id', $collectionId);;
+
+        if($minPrice && $maxPrice != null) {
+            $query->where('price', '>=', $minPrice)->where('price', '<=', $maxPrice);
+        }
+
+        if($typeId != null) {
+            $query->where('type_id', $typeId);
+        }
+
+        if($colorId != null) {
+            $query->whereHas('productVariants', function ($q) use ($colorId) {
+                $q->where('colorId', $colorId);
+            });
+        }
+
+        $products = $query->paginate($size, ['*'], 'page', $page);
 
         return response()->json([
-            'data' => ProductResource::collection($products)
+            'data' => ProductResource::collection($products),
+            'pagination' => [
+                'page' => $products->currentPage(),
+                'size' => $products->perPage(),
+                'total_pages' => $products->lastPage()
+            ]
         ])->setStatusCode(200);
     }
 
