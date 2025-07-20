@@ -73,6 +73,7 @@ Route::middleware(['auth:api'])->group(function() {
         Route::post('/orders/create', 'createNewOrder');
     });
 
+    // admin required
     Route::middleware(['is_admin'])->group(function() {
         Route::controller(ProductController::class)->group(function() {
             Route::post('/products/create', 'createProduct');

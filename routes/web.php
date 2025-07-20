@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CollectionWebController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/create-collection', [CollectionWebController::class, 'createCollection'])->name('collections.add_collection');
+Route::get('/collections', [CollectionWebController::class, 'getCollections'])->name('collections.list_collections');
