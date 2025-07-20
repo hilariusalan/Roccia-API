@@ -25,7 +25,7 @@ class CollectionWebController extends Controller
             'image_url' => $data->input('image_url')
         ]);
 
-        return redirect()->route('collections.add_collection')->with('success', 'Collection created successfully!');
+        return redirect()->route('collections.collection')->with('success', 'Collection created successfully!');
     }
 
     public function editCollection(int $id) {

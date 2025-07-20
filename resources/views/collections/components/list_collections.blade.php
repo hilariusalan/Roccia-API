@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Collections</title>
-</head>
-<body>
-    <h2 class="mb-3">List of Collections</h2>
+@extends('collections.collection')
+
+@section('content')
+<h2 class="mb-3">List of Collections</h2>
 
     <div class="row"> 
     @forelse ($collections as $collection)
@@ -18,6 +12,11 @@
                     <h5 class="card-title">{{ $collection->name }}</h5>
                     <p class="card-text text-muted">Slug: {{ $collection->slug }}</p>
                 </div>
+                <form action="{{ route('collections.destroy', $collection->id) }}" method="POST" style="display:inline-block;">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                </form>
             </div>
         </div>
     @empty
@@ -27,6 +26,5 @@
             </div>
         </div>
     @endforelse
+    @endsection
 </div>
-</body>
-</html>
