@@ -14,6 +14,12 @@ class OrderItem extends Model
     protected $keyType = "int";
     public $timestamps = true;
     public $incrementing = true;
+    protected $fillable = [
+        'order_id',
+        'product_variant_id',
+        'quantity',
+        'total_price'
+    ];
 
     public function productVariants(): BelongsTo {
         return $this->belongsTo(OrderItem::class, "product_variant_id", "id");

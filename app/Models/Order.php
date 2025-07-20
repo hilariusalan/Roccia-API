@@ -14,6 +14,14 @@ class Order extends Model
     protected $keyType = "int";
     public $timestamps = true;
     public $incrementing = true;
+    protected $fillable = [
+        'user_id',
+        'shipping_address_id',
+        'billing_address_id',
+        'shipping_method_id',
+        'total_price',
+        'status_id'
+    ];
 
     public function orderItems(): HasMany {
         return $this->hasMany(Order::class, "order_id", "id");

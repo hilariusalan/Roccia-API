@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\BillingAddressController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\NameController;
 use App\Http\Controllers\OrderController;
@@ -51,6 +52,8 @@ Route::get('/names', [NameController::class, 'getAllProductCollectionNames']);
 Route::get('/colors', [ColorResource::class, 'getColors']);
 
 Route::middleware(['auth:api'])->group(function() {
+    Route::post('/billing-addresses/create', [BillingAddressController::class, 'createBillingAddress']);
+
     Route::controller(UserController::class)->group(function() {
         Route::get('/users', 'getUserData');
         Route::put('/users/update', 'updateUser');
@@ -62,6 +65,12 @@ Route::middleware(['auth:api'])->group(function() {
         Route::post('/users/address/create', 'createAddress');
         Route::put('/users/address/{addressId}/edit', 'updateUserAddress')->where('addressId', '[0-9]+');
         Route::delete('/users/address/{addressId}/delete', 'deleteUserAddress')->where('addressId', '[0-9]+'); 
+    });
+
+    Route::controller(OrderController::class)->group(function() {
+        Route::get('/users/orders', 'getUserOrders');
+        Route::get('/orders/{orderId}', 'getOrderDetail')->where('orderId', '[0-9]+');
+        Route::post('/orders/create', 'createNewOrder');
     });
 
     Route::middleware(['is_admin'])->group(function() {
