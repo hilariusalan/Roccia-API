@@ -4,7 +4,7 @@
 <div class="container">
     <h2 class="mb-4">Product List</h2>
 
-    <form method="GET" action="{{ route('admin.products.index') }}" class="mb-4">
+    <form method="GET" action="{{ route('products.components.list_products') }}" class="mb-4">
         <div class="row">
             <!-- Price Range -->
             <div class="col-md-3">

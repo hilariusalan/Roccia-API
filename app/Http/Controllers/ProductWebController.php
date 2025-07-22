@@ -8,7 +8,7 @@ use App\Models\Product;
 use App\Models\Type;
 use Illuminate\Http\Request;
 
-class ProductAdminController extends Controller
+class ProductWebController extends Controller
 {
     public function index(Request $request)
     {
@@ -34,7 +34,8 @@ class ProductAdminController extends Controller
             });
         }
 
-        $products = $query->paginate($size)->withQueryString();
+        // $products = $query->paginate($size)->withQueryString();
+        $products = $query->paginate($size);
 
         return view('products.components.list_products', [
             'products' => $products,

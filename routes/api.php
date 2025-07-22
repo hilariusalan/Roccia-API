@@ -6,6 +6,7 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\NameController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\ColorResource;
@@ -50,6 +51,7 @@ Route::controller(OrderController::class)->group(function() {
 Route::get('/collections', [CollectionController::class, 'getCollections']);
 Route::get('/names', [NameController::class, 'getAllProductCollectionNames']);
 Route::get('/colors', [ColorResource::class, 'getColors']);
+Route::get('/name', [StatusController::class, 'getStatuses']);
 
 Route::middleware(['auth:api'])->group(function() {
     Route::post('/billing-addresses/create', [BillingAddressController::class, 'createBillingAddress']);
@@ -73,7 +75,7 @@ Route::middleware(['auth:api'])->group(function() {
         Route::post('/orders/create', 'createNewOrder');
     });
 
-    // admin required
+    // admin only required
     Route::middleware(['is_admin'])->group(function() {
         Route::controller(ProductController::class)->group(function() {
             Route::post('/products/create', 'createProduct');
