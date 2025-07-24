@@ -6,6 +6,7 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\NameController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
@@ -35,6 +36,7 @@ Route::controller(UserController::class)->group(function() {
 
 Route::controller(ProductController::class)->group(function() {
     Route::get('/products', 'getProducts');
+    Route::get('/products/{productId}', 'getProductDetail')->where('productId', '[0-9]+');
     Route::get('/collections/{collectionId}/products', 'getProductsPerCollection')->where('collectionId', '[0-9]+');
 });
 
@@ -81,6 +83,12 @@ Route::middleware(['auth:api'])->group(function() {
             Route::post('/products/create', 'createProduct');
             Route::put('/products/{productId}/update', 'updateProduct')->where('productId', '[0-9]+');
             Route::delete('/products/{productId}/delete', 'deleteProduct')->where('productId', '[0-9]+');
+        });
+
+        Route::controller(ProductVariantController::class)->group(function() {
+            Route::post('/products/create/{productId}/variant', 'createProductVariant')->where('productId', '[0-9]+');
+            Route::patch('/products/update/{productVariantId}/variant', 'updateProductVariant')->where('productVariantId', '[0-9]+');
+            Route::delete('/products/delete/{productVariantId}/variant', 'deleteProductVariant')->where('productVariantId', '[0-9]+');
         });
 
         Route::controller(CollectionController::class)->group(function() {

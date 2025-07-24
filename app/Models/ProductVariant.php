@@ -14,6 +14,14 @@ class ProductVariant extends Model
     protected $keyType = "int";
     public $timestamps = true;
     public $incrementing = true;
+    protected $fillable = [
+        'product_id',
+        'color_id',
+        'fabric_id',
+        'size_id',
+        'image_url',
+        'stock'
+    ];
 
     public function orderItems(): HasMany {
         return $this->hasMany(OrderItem::class, "product_variant_id", "id");

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Requests\ProductVariantCreateRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductVariantResource;
 use App\Models\Product;
@@ -229,18 +230,25 @@ class ProductController extends Controller
     }
 
     public function deleteProduct(int $productId): JsonResponse {
-        $product = Product::where('id', $productId)->first();
+        try {
+            $product = Product::where('id', $productId)->first();
 
-        if (!$product) {
+            if (!$product) {
+                throw new HttpResponseException(response()->json([
+                    'error' => 'Product not found.'
+                ])->setStatusCode(404));
+            }
+
+            $product->delete();
+
+            return response()->json([
+                'message' => 'Product deleted successfully.'
+            ])->setStatusCode(200);
+        } catch(Exception $ex) {
             throw new HttpResponseException(response()->json([
-                'error' => 'Product not found.'
-            ])->setStatusCode(404));
+                'error' => 'Something went wrong.',
+                'message' => $ex->getMessage()
+            ])->setStatusCode(500));
         }
-
-        $product->delete();
-
-        return response()->json([
-            'message' => 'Product deleted successfully.'
-        ])->setStatusCode(200);
-    }
+    } 
 }

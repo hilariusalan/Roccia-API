@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id')->nullable(false);
-            $table->unsignedBigInteger('color_id')->nullable(false);
-            $table->unsignedBigInteger('fabric_id')->nullable(false);
-            $table->unsignedBigInteger('size_id')->nullable(false);
+            $table->unsignedBigInteger('color_id')->nullable();
+            $table->unsignedBigInteger('fabric_id')->nullable();
+            $table->unsignedBigInteger('size_id')->nullable();
             $table->string('image_url', 200)->nullable(false);
             $table->integer('stock')->nullable(false);
             $table->timestamps();
