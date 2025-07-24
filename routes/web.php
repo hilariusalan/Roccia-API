@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\CollectionWebController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderWebController;
+use App\Http\Controllers\ProductWebController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +17,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/login', function() {
+    return view('auth.login');
+})->name('auth.login');
 
-Route::post('/create-collection', [CollectionWebController::class, 'createCollection'])->name('collections.add_collection');
-Route::get('/collections', [CollectionWebController::class, 'getCollections'])->name('collections.list_collections');
+Route::post('/verification', function() {
+    return view('auth.verif');
+})->name('auth.verif');
+
+Route::get('/admin', function() {
+    return view('main.main');
+})->name('admin');
+
+
+
+
+
+
+
+
+// Route::get('/admin', function () {
+//     return view('welcome');
+// });
+
+// Route::controller(CollectionWebController::class)->group(function() {
+//     Route::post('/admin/create-collection', 'createCollection')->name('collections.components.add_collection');
+//     Route::get('/admin/collections', 'getCollections')->name('collections.components.list_collections');
+// });
+
+// Route::get('/admin/orders', [OrderWebController::class, 'getOrders'])->name('orders.components.list_orders');
+// Route::get('/admin/orders/{orderId}', function ($orderId) {
+//     return view('orders.components.detail-order', ['orderId' => $orderId]);
+// });
+
+// Route::get('/admin/products', [ProductWebController::class, 'getProducts'])->name('products.components.list_products');
+// Route::get('/products/create', function () {
+//     return view('products.components.add-product');
+// });
+// Route::get('/products/{productId}/edit', function ($productId) {
+//     return view('products.components.update-product', compact('productId'));
+// });
