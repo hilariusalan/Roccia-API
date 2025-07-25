@@ -29,8 +29,11 @@ Route::get('/admin', function() {
     return view('main.main');
 })->name('admin');
 
-
-
+Route::middleware(['auth:api'])->group(function() {
+    Route::middleware(['is_admin'])->group(function() {
+        
+    });
+});
 
 
 
