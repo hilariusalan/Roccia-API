@@ -45,7 +45,7 @@
 
         <div class="mt-3">
             <button type="submit" class="btn btn-primary">Apply Filters</button>
-            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Reset</a>
+            <a href="{{ route('products.components.list_products') }}" class="btn btn-secondary">Reset</a>
         </div>
     </form>
 

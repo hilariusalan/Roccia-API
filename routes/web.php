@@ -26,8 +26,36 @@ Route::post('/verification', function() {
 })->name('auth.verif');
 
 Route::get('/admin', function() {
-    return view('main.main');
+    return view('components.welcome');
 })->name('admin');
+
+Route::get('/products', function() {
+    return view('components.products.list_products');
+})->name('products');
+
+Route::get('/orders', function() {
+    return view('components.orders.list_orders');
+})->name('orders');
+
+Route::get('/create-product', function() {
+    return view('components.products.create_product');
+})->name('create-product');
+
+Route::get('/create-variant', function() {
+    return view('components.products.create_product_variant');
+})->name('create-variant');
+
+Route::get('/detail-product', function() {
+    return view('components.products.detail_product');
+})->name('detail-product');
+
+Route::get('/detail-variant', function() {
+    return view('components.products.detail_product_variant');
+})->name('detail-variant');
+
+Route::get('/detail-order', function() {
+    return view('components.orders.detail_order');
+})->name('detail-order');
 
 Route::middleware(['auth:api'])->group(function() {
     Route::middleware(['is_admin'])->group(function() {

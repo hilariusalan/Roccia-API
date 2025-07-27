@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Status;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderWebController extends Controller
@@ -33,4 +34,20 @@ class OrderWebController extends Controller
             ]
         ]);
     }
+
+    public function updateOrderStatus(Request $request, $orderId): JsonResponse {
+        $order = Order::findOrFail($orderId);
+        $request->validate([
+            'status_id' => 'required|exists:statuses,id',
+        ]);
+
+        $order->status_id = $request->status_id;
+        $order->save();
+
+        return response()->json([
+            'message' => 'Status updated successfully'
+        ]);
+    }
 }
+
+

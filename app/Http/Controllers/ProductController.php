@@ -20,7 +20,6 @@ class ProductController extends Controller
 {
     public function createProduct(ProductCreateRequest $request): JsonResponse {
         try {
-
             $user = Auth::user();
     
             $decayMinutes = 1;

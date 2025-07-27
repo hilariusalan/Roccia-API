@@ -15,13 +15,12 @@
                 <h1 class="text-xl font-bold text-blue-500">🔷 Logo</h1>
             </div>
             <nav class="flex flex-col p-4 space-y-2">
-                <a href="" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Dashboard</a>
-                <a href="" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Collections</a>
-                <a href="" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Products</a>
+                <a href="{{ route('products') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Products</a>
+                <a href="{{ route('orders') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Orders</a>
             </nav>
         </div>
         <div class="p-4 border-t">
-            <form method="POST" action="">
+            <form method="GET" action="{{ route('auth.login') ">
                 @csrf
                 <button type="submit" class="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Logout</button>
             </form>

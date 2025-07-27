@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ProductWebController extends Controller
 {
-    public function index(Request $request)
+    public function getProducts(Request $request)
     {
         $size = $request->query('size', 10);
         $minPrice = $request->query('min_price');
