@@ -16,7 +16,11 @@ class ProductVariantResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'color' => $this->colors->name,
+            'color' => [
+                'id' => $this->colors->id,
+                'name' => $this->colors->name,
+                'hex' => $this->colors->hex,
+            ],
             'fabric' => $this->fabrics->name,
             'image' => $this->image_url,
             'price' => (int)$this->products->price,
