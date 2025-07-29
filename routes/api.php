@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\BillingAddressController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\NameController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -79,6 +80,8 @@ Route::middleware(['auth:api'])->group(function() {
 
     // admin only required
     Route::middleware(['is_admin'])->group(function() {
+        Route::post('/image/upload', [ImageController::class, 'uploadImage']);
+
         Route::controller(ProductController::class)->group(function() {
             Route::post('/products/create', 'createProduct');
             Route::put('/products/{productId}/update', 'updateProduct')->where('productId', '[0-9]+');

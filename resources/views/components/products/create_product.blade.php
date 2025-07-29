@@ -56,4 +56,91 @@
 
     <div id="result" class="mt-6 text-sm text-gray-600"></div>
 </div>
+<script>
+    
+document.addEventListener('DOMContentLoaded', function () {
+    // Populate collections and types
+    fetch('/api/collections')
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById('collection_id');
+            data.data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.text = item.name;
+                select.appendChild(option);
+            });
+        });
+
+    fetch('/api/types')
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById('type_id');
+            data.data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.text = item.name;
+                select.appendChild(option);
+            });
+        });
+
+    // Image Upload
+    const imageInput = document.getElementById('image_upload');
+    imageInput.addEventListener('change', function () {
+        const file = this.files[0];
+        const formData = new FormData();
+        formData.append('image', file);
+
+        fetch('/upload-image', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.url) {
+                document.getElementById('image_url').value = data.url;
+                document.getElementById('preview-image').innerHTML = `
+                    <img src="${data.url}" alt="Preview" class="w-40 h-40 object-cover mt-2 rounded-lg shadow" />
+                `;
+            } else {
+                alert('Upload gagal!');
+            }
+        })
+        .catch(() => alert('Gagal mengunggah gambar'));
+    });
+
+    // Form Submit
+    const form = document.getElementById('product-form');
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch('/products/create', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById('result').innerText = data.message;
+                form.reset();
+                document.getElementById('preview-image').innerHTML = '';
+            } else {
+                document.getElementById('result').innerText = data.error || 'Failed to create product.';
+            }
+        })
+        .catch(err => {
+            document.getElementById('result').innerText = 'Something went wrong.';
+        });
+    });
+});
+</script>
 @endsection

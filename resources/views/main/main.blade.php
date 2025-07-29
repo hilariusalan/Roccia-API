@@ -15,7 +15,7 @@
                 <h1 class="text-xl font-bold text-blue-500">🔷 Logo</h1>
             </div>
             <nav class="flex flex-col p-4 space-y-2">
-                <a href="{{ route('products') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Products</a>
+                <a href="{{ route('products.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Products</a>
                 <a href="{{ route('orders') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Orders</a>
             </nav>
         </div>

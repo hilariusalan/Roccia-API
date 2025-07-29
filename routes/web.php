@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// view
 Route::get('/login', function() {
     return view('auth.login');
 })->name('auth.login');
@@ -56,6 +57,12 @@ Route::get('/detail-variant', function() {
 Route::get('/detail-order', function() {
     return view('components.orders.detail_order');
 })->name('detail-order');
+
+// controller 
+// routes/web.php
+Route::get('/products', [ProductWebController::class, 'index'])->name('products.index');
+Route::delete('/products/{id}', [ProductWebController::class, 'destroy'])->name('products.destroy');
+
 
 Route::middleware(['auth:api'])->group(function() {
     Route::middleware(['is_admin'])->group(function() {
