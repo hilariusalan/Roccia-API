@@ -48,4 +48,76 @@
 
     <div id="result" class="mt-6 text-sm text-gray-600"></div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const colorSelect = document.getElementById("color_id");
+    const sizeSelect = document.getElementById("size_id");
+    const fabricSelect = document.getElementById("fabric_id");
+    const imageInput = document.getElementById("image_upload");
+    const imageUrlInput = document.getElementById("image_url");
+    const preview = document.getElementById("preview-image");
+    const resultDiv = document.getElementById("result");
+
+    // Load options dynamically
+    async function loadOptions(url, selectElement) {
+        const res = await fetch(url);
+        const data = await res.json();
+        data.data.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.id;
+            option.textContent = item.name;
+            selectElement.appendChild(option);
+        });
+    }
+
+    loadOptions("/colors", colorSelect);
+    loadOptions("/sizes", sizeSelect);
+    loadOptions("/fabrics", fabricSelect);
+
+    // Upload image to Cloudinary
+    imageInput.addEventListener("change", async function () {
+        const file = imageInput.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch("/image/upload", {
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: formData
+        });
+
+        const data = await res.json();
+        imageUrlInput.value = data.url;
+        preview.innerHTML = `<img src="${data.url}" alt="Preview" class="mt-2 h-24 rounded-lg shadow-md">`;
+    });
+
+    // Submit form
+    document.getElementById("variant-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        const productId = $productId ?? 1 // Replace with dynamic variable if needed
+        const res = await fetch(`/products/${productId}/variants/create`, {
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': formData.get('_token')
+            },
+            body: formData
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            resultDiv.innerHTML = `<span class="text-green-600 font-semibold">✅ ${data.message}</span>`;
+        } else {
+            resultDiv.innerHTML = `<span class="text-red-600 font-semibold">❌ ${data.error || 'Failed to create variant.'}</span>`;
+        }
+    });
+});
+</script>
+
 @endsection

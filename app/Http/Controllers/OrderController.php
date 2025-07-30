@@ -88,7 +88,15 @@ class OrderController extends Controller
         return response()->json([
             'data' => [
                 'user' => $order->users->email,
-                'shipping' => $order->shippingAddresses->name,
+                'shipping' => [
+                    'first_name' => $order->shippingAddresses->first_name,
+                    'last_name' => $order->shippingAddresses->last_name,
+                    'address' => $order->shippingAddresses->address,
+                    'appartment_suite' => $order->shippingAddresses->appartment_suite,
+                    'city' => $order->shippingAddresses->city,
+                    'province' => $order->shippingAddresses->province,
+                    'country' => $order->shippingAddresses->country
+                ],
                 'billing_address' => [
                     'first_name' => $order->billingAddresses->first_name,
                     'last_name' => $order->billingAddresses->last_name,
@@ -116,7 +124,7 @@ class OrderController extends Controller
 
         $decayMinutes = 1;
         $maxAttemps = 3;
-        $key = 'create-address: ' . $user->email;
+        $key = 'create-order: ' . $user->email;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
             $second = RateLimiter::availableIn($key);

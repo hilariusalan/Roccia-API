@@ -4,10 +4,17 @@
 <div class="container mx-auto px-6 py-10">
     <div class="flex flex-col md:flex-row justify-between items-center mb-10">
         <h1 class="text-4xl font-bold text-gray-800 mb-4 md:mb-0">My Products</h1>
-        <div class="flex flex-col sm:flex-row items-center gap-4">
+
+        <form method="GET" action="{{ route('products.index') }}" class="flex flex-col sm:flex-row items-center gap-4">
             <div class="relative w-full sm:w-auto">
-                <select id="collection-filter" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow">
-                    <option value="">All collections</option>
+                <select id="collection-filter" name="collection" onchange="this.form.submit()"
+                        class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow">
+                    <option value="">All Collections</option>
+                    @foreach ($collections as $collection)
+                        <option value="{{ $collection->id }}" {{ request('collection') == $collection->id ? 'selected' : '' }}>
+                            {{ $collection->name }}
+                        </option>
+                    @endforeach
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -17,8 +24,14 @@
             </div>
 
             <div class="relative w-full sm:w-auto">
-                <select id="type-filter" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow">
-                    <option value="">All types</option>
+                <select id="type-filter" name="type" onchange="this.form.submit()"
+                        class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow">
+                    <option value="">All Types</option>
+                    @foreach ($types as $type)
+                        <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+                            {{ $type->name }}
+                        </option>
+                    @endforeach
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -31,7 +44,7 @@
                class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow transition-all duration-200 text-center">
                 + Add New Product
             </a>
-        </div>
+        </form>
     </div>
 
     {{-- Product List --}}
@@ -40,7 +53,7 @@
             <div class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden flex flex-col">
                 <div class="relative h-48 bg-gray-200">
                     <img src="{{ $product->usage_image ?? 'https://via.placeholder.com/300' }}" alt="Product Image"
-                        class="absolute inset-0 w-full h-full object-cover">
+                         class="absolute inset-0 w-full h-full object-cover">
                 </div>
 
                 <div class="p-4 flex flex-col gap-2 flex-grow">
@@ -60,15 +73,15 @@
                 </div>
 
                 <div class="p-4 pt-0 flex flex-col gap-2">
-                    <form action="{{ route('detail-product', ['slug' => $product->slug]) }}" method="GET">
+                    <form action="{{ route('product.detail', ['productId' => $product->id]) }}" method="GET">
                         <button type="submit"
                                 class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded transition focus:ring-2 ring-blue-500">
                             See Detail
                         </button>
                     </form>
 
-                    <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+                    <form action="{{ route('products.destroy', ['productId' => $product->id]) }}" method="POST"
+                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit"

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Collection;
 use App\Models\Color;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Type;
 use Illuminate\Http\Request;
 
@@ -44,6 +45,22 @@ class ProductWebController extends Controller
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    public function showProductDetail(int $productId)
+    {
+        $product = Product::with(['collections', 'types', 'productUsageImage'])->find($productId);
+
+        if (!$product) {
+            abort(404, 'Produk tidak ditemukan');
+        }
+
+        $variants = ProductVariant::with(['colors', 'fabrics', 'sizes'])->where('product_id', $productId)->get();
+
+        return view('components.products.detail_product', [
+            'product' => $product,
+            'variants' => $variants
+        ]);
     }
 
     // public function getProducts(Request $request)

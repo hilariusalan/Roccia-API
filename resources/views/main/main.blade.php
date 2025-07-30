@@ -16,11 +16,11 @@
             </div>
             <nav class="flex flex-col p-4 space-y-2">
                 <a href="{{ route('products.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Products</a>
-                <a href="{{ route('orders') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Orders</a>
+                <a href="{{ route('orders.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Orders</a>
             </nav>
         </div>
         <div class="p-4 border-t">
-            <form method="GET" action="{{ route('auth.login') ">
+            <form method="GET" action="{{ route('auth.login') }}">
                 @csrf
                 <button type="submit" class="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Logout</button>
             </form>

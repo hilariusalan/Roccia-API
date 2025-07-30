@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\BillingAddressController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\NameController;
 use App\Http\Controllers\OrderController;
@@ -53,7 +54,9 @@ Route::controller(OrderController::class)->group(function() {
 
 Route::get('/collections', [CollectionController::class, 'getCollections']);
 Route::get('/names', [NameController::class, 'getAllProductCollectionNames']);
-Route::get('/colors', [ColorResource::class, 'getColors']);
+Route::get('/colors', [ColorController::class, 'getColors']);
+Route::get('/sizes', [ColorController::class, 'getSizes']);
+Route::get('/fabrics', [ColorController::class, 'getFabrics']);
 Route::get('/name', [StatusController::class, 'getStatuses']);
 
 Route::middleware(['auth:api'])->group(function() {
