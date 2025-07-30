@@ -6,6 +6,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderWebController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProductWebController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserWebController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -25,9 +27,11 @@ Route::get('/login', function() {
     return view('auth.login');
 })->name('auth.login');
 
-Route::post('/verification', function() {
-    return view('auth.verif');
-})->name('auth.verif');
+// Route::post('/verification', function() {
+//     return view('auth.verif');
+// })->name('auth.verif');
+
+Route::get('/verify', fn () => view('verif'))->name('auth.verify.form');
 
 Route::get('/admin', function() {
     return view('components.welcome');
@@ -62,6 +66,11 @@ Route::get('/detail-order', function() {
 })->name('detail-order');
 
 // controller 
+Route::controller(UserWebController::class)->group(function() {
+    Route::post('/login', 'userRequestOtpBlade')->name('auth.verif');
+    Route::post('/verify-otp', 'userVerifyOtpBlade')->name('auth.verify');
+});
+
 Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
 
 Route::controller(ProductWebController::class)->group(function() {
