@@ -18,6 +18,7 @@ class CollectionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'image_url' => $this->image_url,
             'created_at' => $this->created_at->format('d-M-y')
         ];
     }

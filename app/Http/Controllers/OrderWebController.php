@@ -22,7 +22,7 @@ class OrderWebController extends Controller
         $orders = $query->latest()->get();
         $statuses = Status::all();
 
-        return view('orders.index', [
+        return view('components.orders.list_orders', [
             'orders' => $orders,
             'statuses' => $statuses,
             'selectedStatusId' => $statusId

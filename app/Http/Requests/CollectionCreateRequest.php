@@ -24,7 +24,8 @@ class CollectionCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:100'],
-            'slug' => ['required', 'max:100']
+            'slug' => ['required', 'max:100'],
+            'image_url' => ['required', 'max:200']
         ];
     }
 

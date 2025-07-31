@@ -16,6 +16,7 @@
             </div>
             <nav class="flex flex-col p-4 space-y-2">
                 <a href="{{ route('products.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Products</a>
+                <a href="{{ route('collections.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Collections</a>
                 <a href="{{ route('orders.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Orders</a>
             </nav>
         </div>

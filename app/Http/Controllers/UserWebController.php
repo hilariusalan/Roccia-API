@@ -48,7 +48,7 @@ class UserWebController extends Controller
         // Simpan email di session agar bisa dipakai di verifikasi
         session(['email' => $email]);
 
-        return redirect()->route('auth.verify.form')->with('success', 'OTP telah dikirim ke email Anda.');
+        return redirect()->route('verify')->with('success', 'OTP telah dikirim ke email Anda.');
     }
 
     public function userVerifyOtpBlade(Request $request)
@@ -93,7 +93,7 @@ class UserWebController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('admin')->with('success', 'Login berhasil.');
+        return redirect()->route('/')->with('success', 'Login berhasil.');
     }
 
 

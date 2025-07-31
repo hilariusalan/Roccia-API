@@ -31,7 +31,7 @@ class ProductWebController extends Controller
         $collections = Collection::all();
         $types = Type::all();
 
-        return view('components.products.list-products', compact('products', 'collections', 'types'));
+        return view('components.products.list_products', compact('products', 'collections', 'types'));
     }
 
     public function destroy($id)

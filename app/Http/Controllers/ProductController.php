@@ -47,6 +47,7 @@ class ProductController extends Controller
             ]);
     
             $product->productUsageImages()->create([
+                'product_id' => $product->id,
                 'image_url' => $data['image_url']
             ]);
     

@@ -25,51 +25,19 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 // view
 Route::get('/login', function() {
     return view('auth.login');
-})->name('auth.login');
+})->name('login');
 
-// Route::post('/verification', function() {
-//     return view('auth.verif');
-// })->name('auth.verif');
-
-Route::get('/verify', fn () => view('verif'))->name('auth.verify.form');
-
-Route::get('/admin', function() {
-    return view('components.welcome');
-})->name('admin');
-
-Route::get('/products', function() {
-    return view('components.products.list_products');
-})->name('products');
-
-Route::get('/orders', function() {
-    return view('components.orders.list_orders');
-})->name('orders');
-
-Route::get('/create-product', function() {
-    return view('components.products.create_product');
-})->name('create-product');
-
-Route::get('/create-variant', function() {
-    return view('components.products.create_product_variant');
-})->name('create-variant');
-
-Route::get('/detail-product', function() {
-    return view('components.products.detail_product');
-})->name('detail-product');
-
-Route::get('/detail-variant', function() {
-    return view('components.products.detail_product_variant');
-})->name('detail-variant');
-
-Route::get('/detail-order', function() {
-    return view('components.orders.detail_order');
-})->name('detail-order');
+Route::get('/verify', function() {
+    return view('auth.verif');
+})->name('verify');
 
 // controller 
 Route::controller(UserWebController::class)->group(function() {
-    Route::post('/login', 'userRequestOtpBlade')->name('auth.verif');
-    Route::post('/verify-otp', 'userVerifyOtpBlade')->name('auth.verify');
+    Route::post('/auth-verif', 'userRequestOtpBlade')->name('auth-verif');
+    Route::post('/auth-verify-otp', 'userVerifyOtpBlade')->name('auth-verify-otp');
 });
+
+// Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
 
 Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
 
@@ -77,6 +45,12 @@ Route::controller(ProductWebController::class)->group(function() {
     Route::get('/products', 'index')->name('products.index');
     Route::get('/products/{productId}', 'showProductDetail')->name('product.detail');
     Route::delete('/products/{productId}', 'destroy')->name('products.destroy');
+});
+
+Route::controller(CollectionWebController::class)->group(function() {
+    Route::get('/collections', 'getCollections')->name('collections.index');
+    Route::post('/collections/create', 'createCollection')->name('collections.create');
+    Route::get('/collections/{collectionId}/delete', 'deleteCollection')->name('collections.delete');
 });
 
 Route::controller(OrderWebController::class)->group(function() {
@@ -93,33 +67,45 @@ Route::controller(ProductVariantController::class)->group(function() {
 
 
 Route::middleware(['auth:api'])->group(function() {
-    Route::middleware(['is_admin'])->group(function() {
-        
+    Route::middleware(['is_admin_web'])->group(function() {
+        Route::get('/', function() {
+            return view('components.welcome');
+        })->name('admin');
+
+        Route::get('/products', function() {
+            return view('components.products.list_products');
+        })->name('products');
+
+        Route::get('/collections', function() {
+            return view('components.collections.list_collection');
+        })->name('collections');
+
+        Route::get('/create-collection', function() {
+            return view('components.collections.create_collection');
+        })->name('create-collection');
+
+        Route::get('/orders', function() {
+            return view('components.orders.list_orders');
+        })->name('orders');
+
+        Route::get('/create-product', function() {
+            return view('components.products.create_product');
+        })->name('create-product');
+
+        Route::get('/create-variant', function() {
+            return view('components.products.create_product_variant');
+        })->name('create-variant');
+
+        Route::get('/detail-product', function() {
+            return view('components.products.detail_product');
+        })->name('detail-product');
+
+        Route::get('/detail-variant', function() {
+            return view('components.products.detail_product_variant');
+        })->name('detail-variant');
+
+        Route::get('/detail-order', function() {
+            return view('components.orders.detail_order');
+        })->name('detail-order');
     });
 });
-
-
-
-
-
-// Route::get('/admin', function () {
-//     return view('welcome');
-// });
-
-// Route::controller(CollectionWebController::class)->group(function() {
-//     Route::post('/admin/create-collection', 'createCollection')->name('collections.components.add_collection');
-//     Route::get('/admin/collections', 'getCollections')->name('collections.components.list_collections');
-// });
-
-// Route::get('/admin/orders', [OrderWebController::class, 'getOrders'])->name('orders.components.list_orders');
-// Route::get('/admin/orders/{orderId}', function ($orderId) {
-//     return view('orders.components.detail-order', ['orderId' => $orderId]);
-// });
-
-// Route::get('/admin/products', [ProductWebController::class, 'getProducts'])->name('products.components.list_products');
-// Route::get('/products/create', function () {
-//     return view('products.components.add-product');
-// });
-// Route::get('/products/{productId}/edit', function ($productId) {
-//     return view('products.components.update-product', compact('productId'));
-// });

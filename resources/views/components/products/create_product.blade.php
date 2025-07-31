@@ -67,7 +67,7 @@
         </div>
     </form>
 
-    <div id="result" class="mt-6 text-sm text-gray-600"></div>
+    <p id="result" class="mt-6 text-sm text-gray-600"></p>
 </div>
 <script>
     

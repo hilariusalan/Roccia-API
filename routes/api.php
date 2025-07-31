@@ -83,8 +83,6 @@ Route::middleware(['auth:api'])->group(function() {
 
     // admin only required
     Route::middleware(['is_admin'])->group(function() {
-        Route::post('/image/upload', [ImageController::class, 'uploadImage']);
-
         Route::controller(ProductController::class)->group(function() {
             Route::post('/products/create', 'createProduct');
             Route::put('/products/{productId}/update', 'updateProduct')->where('productId', '[0-9]+');
@@ -106,6 +104,5 @@ Route::middleware(['auth:api'])->group(function() {
         Route::controller(OrderController::class)->group(function() {
             Route::get('/orders', 'getOrders');
         });
-
     });
 });
