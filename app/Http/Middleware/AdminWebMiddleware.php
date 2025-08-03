@@ -11,16 +11,11 @@ class AdminWebMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // Pengecekan pertama: Apakah pengguna sudah login?
         if (!Auth::check()) {
-            // Jika belum, redirect ke halaman login
             return redirect()->route('auth-login');
         }
 
-        // Pengecekan kedua: Apakah pengguna yang sudah login adalah admin?
         if (!Auth::user()->is_admin) {
-            // Jika bukan admin, tolak akses dengan 403 Forbidden
-            // Ini akan menampilkan halaman 403 standar Laravel
             abort(403, 'Akses ditolak. Hanya admin yang diizinkan.');
         }
 
