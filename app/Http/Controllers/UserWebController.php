@@ -93,7 +93,7 @@ class UserWebController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('/')->with('success', 'Login berhasil.');
+        return redirect()->route('admin')->with('success', 'Login berhasil.');
     }
 
 

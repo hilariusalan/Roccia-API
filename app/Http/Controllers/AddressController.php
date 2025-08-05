@@ -48,12 +48,14 @@ class AddressController extends Controller
 
             return response()->json([
                 'message' => 'Address created successfully.',
-                'data' => new AddressResource($address)
+                'data' => new AddressResource($address),
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -123,12 +125,14 @@ class AddressController extends Controller
                     'postal_code' => $userAddress->postal_code,
                     'country' => $userAddress->country,
                     'updated_at' => $userAddress->updated_at->format('d-M-Y')
-            ]
-        ])->setStatusCode(200);
+                ],
+                'isSuccess' => true
+            ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -147,12 +151,14 @@ class AddressController extends Controller
             $userAddress->delete();
 
             return response()->json([
-                'message' => 'Address deleted successfully.'
+                'message' => 'Address deleted successfully.',
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }

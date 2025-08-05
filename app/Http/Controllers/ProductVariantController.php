@@ -54,12 +54,14 @@ class ProductVariantController extends Controller
                     'image_url' => $productVariant->image_url,
                     'stock' => $productVariant->stock,
                     'created_at' => $productVariant->created_at->format('d-M-y')
-                ]
+                ],
+                'isSuccess' => true
             ])->setStatusCode(201);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -107,12 +109,14 @@ class ProductVariantController extends Controller
                     'image_url' => $productVariant->image_url,
                     'stock' => $productVariant->stock,
                     'updated_at' => $productVariant->updated_at->format('d-M-y')
-                ]
+                ],
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -130,12 +134,14 @@ class ProductVariantController extends Controller
             $productVariant->delete();
 
             return response()->json([
-                'message' => 'Product variant deleted successfully.'
+                'message' => 'Product variant deleted successfully.',
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch(Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         }
     }

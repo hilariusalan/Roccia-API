@@ -176,13 +176,15 @@ class OrderController extends Controller
                 'data' => [
                     'order_id' => $order->id,
                     'created_at' => $order->created_at->format('d-m-Y'),
-                ]
+                ],
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             DB::rollBack();
             return response()->json([
                 'message' => 'Failed to create order.',
-                'error' => $ex->getMessage()
+                'error' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500);
         }
     }

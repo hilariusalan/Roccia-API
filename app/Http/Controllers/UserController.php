@@ -51,12 +51,14 @@ class UserController extends Controller
             Mail::to($data->email)->send(new SendOtpMail($otp));
     
             return response()->json([
-                'message' => 'Otp send successfully.'
+                'message' => 'Otp send successfully.',
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -108,12 +110,14 @@ class UserController extends Controller
                     'email' => $user->email,
                     'full_name' => $user->full_name,
                     'token' => $token
-                ]
+                ],
+                'isSuccess' => true
             ]);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -165,22 +169,33 @@ class UserController extends Controller
                     'full_name' => $userData->full_name,
                     'is_admin' => $userData->is_admin,
                     'updated_at' => $userData->updated_at
-                ]
+                ],
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
 
     public function logoutUser() {
-        JWTAuth::invalidate(JWTAuth::getToken());
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
         
-        return response()->json([
-            'message' => 'Logout successful.'
-        ])->setStatusCode(200);
+            return response()->json([
+                'message' => 'Logout successful.',
+                'isSuccess' => true
+            ])->setStatusCode(200);
+        } catch (Exception $ex) {
+            throw new HttpResponseException(response()->json([
+                'error' => 'Something went wrong.',
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
+            ])->setStatusCode(500));
+        }
     }
     
 }

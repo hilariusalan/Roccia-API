@@ -55,12 +55,14 @@ class ProductController extends Controller
     
             return response()->json([
                 'message' => 'Product created successfully',
-                'data' => new ProductResource($product)
+                'data' => new ProductResource($product),
+                'isSuccess' => true
             ])->setStatusCode(201);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -219,12 +221,14 @@ class ProductController extends Controller
                     'description' => $product->description,
                     'image_url' => $product->productUsageImages->image_url,
                     'updated_at' => $product->updated_at->format('d-m-Y'),  
-                ]
+                ],
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -242,12 +246,14 @@ class ProductController extends Controller
             $product->delete();
 
             return response()->json([
-                'message' => 'Product deleted successfully.'
+                'message' => 'Product deleted successfully.',
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch(Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         }
     } 

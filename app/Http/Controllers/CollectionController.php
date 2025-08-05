@@ -40,12 +40,14 @@ class CollectionController extends Controller
     
             return response()->json([
                 'message' => 'Collection created successfully',
-                'data' => new CollectionResource($collection)
+                'data' => new CollectionResource($collection),
+                'isSuccess' => true
             ])->setStatusCode(201);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
@@ -95,29 +97,40 @@ class CollectionController extends Controller
                     'name' => $collection->name,
                     'slug' => $collection->slug,
                     'updated_at' => $collection->updated_at->format('d-M-y')
-                ]
+                ],
+                'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
             ])->setStatusCode(500));
         } 
     }
 
     public function deleteCollection(int $collectionId): JsonResponse {
-        $collection = Collection::where('id', $collectionId)->first();
-        if (!$collection) {
+        try {
+            $collection = Collection::where('id', $collectionId)->first();
+            if (!$collection) {
+                throw new HttpResponseException(response()->json([
+                    'error' => 'Collection not found.'
+                ])->setStatusCode(404));
+            }
+
+            $collection->delete();
+
+            return response()->json([
+                'message' => 'Collection deleted successfully.',
+                'isSuccess' => true
+            ])->setStatusCode(200);
+        } catch (Exception $ex) {
             throw new HttpResponseException(response()->json([
-                'error' => 'Collection not found.'
-            ])->setStatusCode(404));
+                'error' => 'Something went wrong.',
+                'message' => $ex->getMessage(),
+                'isSuccess' => false
+            ])->setStatusCode(500));
         }
-
-        $collection->delete();
-
-        return response()->json([
-            'message' => 'Collection deleted successfully.'
-        ])->setStatusCode(200);
     }
 
 }

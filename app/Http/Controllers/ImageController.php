@@ -19,12 +19,14 @@ class ImageController extends Controller
 
         return response()->json([
             'message' => 'Image uploaded successfully',
-            'url' => $uploadedFileUrl
+            'url' => $uploadedFileUrl,
+            'isSuccess' => true
         ]);
     } catch (\Exception $e) {
         return response()->json([
             'error' => 'Image upload failed',
-            'message' => $e->getMessage()
+            'message' => $e->getMessage(),
+            'isSuccess' => false
         ], 500);
     }
 }

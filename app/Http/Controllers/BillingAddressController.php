@@ -52,7 +52,8 @@ class BillingAddressController extends Controller
                 'province' => $billingAddress->province,
                 'postal_code' => $billingAddress->postal_code,
                 'country' => $billingAddress->country
-            ]
+            ],
+            'isSuccess' => true
         ])->setStatusCode(200);
     }
 
