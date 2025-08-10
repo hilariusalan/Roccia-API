@@ -16,7 +16,8 @@ class Collection extends Model
 
     protected $fillable = [
         'name', 
-        'slug'
+        'slug',
+        'image_url'
     ];
     
     public function products(): HasMany {

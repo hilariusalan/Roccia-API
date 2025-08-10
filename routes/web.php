@@ -32,80 +32,68 @@ Route::get('/verify', function() {
 })->name('verify');
 
 // controller 
-Route::controller(UserWebController::class)->group(function() {
-    Route::post('/auth-verif', 'userRequestOtpBlade')->name('auth-verif');
-    Route::post('/auth-verify-otp', 'userVerifyOtpBlade')->name('auth-verify-otp');
-});
-
-// Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
+Route::post('/auth-verif', [UserWebController::class, 'userRequestOtpBlade'])->name('auth-verif');
+Route::post('/auth-verify-otp', [UserWebController::class, 'userVerifyOtpBlade'])->name('auth-verify-otp');
+Route::delete('/logout', [UserWebController::class, 'logout'])->name('logout');
 
 Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
 
-Route::controller(ProductWebController::class)->group(function() {
-    Route::get('/products', 'index')->name('products.index');
-    Route::get('/products/{productId}', 'showProductDetail')->name('product.detail');
-    Route::delete('/products/{productId}', 'destroy')->name('products.destroy');
-});
+Route::post('/products/create', [ProductWebController::class, 'createProduct'])->name('products.create');
+Route::get('/products', [ProductWebController::class, 'getProducts'])->name('products.index');
+Route::get('/products/{productId}/update', [ProductWebController::class, 'showProductDetail'])->name('product.detail');
+Route::delete('/products/{productId}/delete', [ProductWebController::class, 'destroy'])->name('products.destroy');
 
-Route::controller(CollectionWebController::class)->group(function() {
-    Route::get('/collections', 'getCollections')->name('collections.index');
-    Route::post('/collections/create', 'createCollection')->name('collections.create');
-    Route::get('/collections/{collectionId}/delete', 'deleteCollection')->name('collections.delete');
-});
+Route::get('/collections', [CollectionWebController::class, 'getCollections'])->name('collections.index');
+Route::post('/collections/create', [CollectionWebController::class, 'createCollection'])->name('collections.create');
+Route::delete('/collections/{collectionId}/delete', [CollectionWebController::class, 'deleteCollection'])->name('collections.delete');
 
-Route::controller(OrderWebController::class)->group(function() {
-    Route::get('/orders', 'showOrders')->name('orders.index');
-    Route::get('/orders/{orderId}', 'showDetail')->name('order.detail');
-    Route::post('/orders/{orderId}/update-status', 'updateStatus')->name('order.updateStatus');
-});
+Route::get('/orders', [OrderWebController::class, 'showOrders'])->name('orders.index');
+Route::get('/orders/{orderId}', [OrderWebController::class, 'showDetail'])->name('order.detail');
+Route::post('/orders/{orderId}/update-status', [OrderWebController::class, 'updateStatus'])->name('order.updateStatus');
 
-Route::controller(ProductVariantController::class)->group(function() {
-    Route::post('/products/{productId}/variants/create', 'createProductVariant')->name('variant.create');
-    Route::post('/products/{productId}/variants/update', 'updateProductVariant')->name('variant.update');
-    Route::post('/products/{productId}/variants/delete', 'deleteProductVariant')->name('variant.delete');
-});
+// Route::post('/products/{productId}/variants/create', [ProductVariantController::class, 'createProductVariant'])->name('variant.create');
+Route::post('/products/{productId}/variants/create', [ProductVariantController::class, 'createProductVariant'])->name('variant.create');
+Route::post('/products/{productId}/variants/update', [ProductVariantController::class, 'updateProductVariant'])->name('variant.update');
+Route::post('/products/{productId}/variants/delete', [ProductVariantController::class, 'deleteProductVariant'])->name('variant.delete');
 
+Route::middleware(['is_admin_web'])->group(function() {
+    Route::get('/', function() {
+        return view('components.welcome');
+    })->name('admin');
 
-Route::middleware(['auth:api'])->group(function() {
-    Route::middleware(['is_admin_web'])->group(function() {
-        Route::get('/', function() {
-            return view('components.welcome');
-        })->name('admin');
+    Route::get('/products-view', function() {
+        return view('components.products.list_products');
+    })->name('products');
 
-        Route::get('/products', function() {
-            return view('components.products.list_products');
-        })->name('products');
+    Route::get('/collections-view', function() {
+        return view('components.collections.list_collection');
+    })->name('collections');
 
-        Route::get('/collections', function() {
-            return view('components.collections.list_collection');
-        })->name('collections');
+    Route::get('/create-collection', function() {
+        return view('components.collections.create_collection');
+    })->name('create-collection');
 
-        Route::get('/create-collection', function() {
-            return view('components.collections.create_collection');
-        })->name('create-collection');
+    Route::get('/orders-view', function() {
+        return view('components.orders.list_orders');
+    })->name('orders');
 
-        Route::get('/orders', function() {
-            return view('components.orders.list_orders');
-        })->name('orders');
+    Route::get('/create-product', function() {
+        return view('components.products.create_product');
+    })->name('create-product');
 
-        Route::get('/create-product', function() {
-            return view('components.products.create_product');
-        })->name('create-product');
+    Route::get('/create-variant', function() {
+        return view('components.products.create_product_variant');
+    })->name('create-variant');
 
-        Route::get('/create-variant', function() {
-            return view('components.products.create_product_variant');
-        })->name('create-variant');
+    Route::get('/detail-product', function() {
+        return view('components.products.detail_product');
+    })->name('detail-product');
 
-        Route::get('/detail-product', function() {
-            return view('components.products.detail_product');
-        })->name('detail-product');
+    Route::get('/detail-variant', function() {
+        return view('components.products.detail_product_variant');
+    })->name('detail-variant');
 
-        Route::get('/detail-variant', function() {
-            return view('components.products.detail_product_variant');
-        })->name('detail-variant');
-
-        Route::get('/detail-order', function() {
-            return view('components.orders.detail_order');
-        })->name('detail-order');
-    });
+    Route::get('/detail-order', function() {
+        return view('components.orders.detail_order');
+    })->name('detail-order');
 });

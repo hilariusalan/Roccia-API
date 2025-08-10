@@ -15,21 +15,21 @@
 
         <div>
             <label for="color_id" class="block text-sm font-medium text-gray-700 mb-1">Color</label>
-            <select id="color_id" name="color_id" required class="w-full border rounded-lg p-2">
+            <select id="color_id" name="color_id" class="w-full border rounded-lg p-2">
                 <!-- Options go here -->
             </select>
         </div>
 
         <div>
             <label for="size_id" class="block text-sm font-medium text-gray-700 mb-1">Size</label>
-            <select id="size_id" name="size_id" required class="w-full border rounded-lg p-2">
+            <select id="size_id" name="size_id" class="w-full border rounded-lg p-2">
                 <!-- Options go here -->
             </select>
         </div>
 
         <div>
             <label for="fabric_id" class="block text-sm font-medium text-gray-700 mb-1">Fabric</label>
-            <select id="fabric_id" name="fabric_id" required class="w-full border rounded-lg p-2">
+            <select id="fabric_id" name="fabric_id" class="w-full border rounded-lg p-2">
                 <!-- Options go here -->
             </select>
         </div>
@@ -71,9 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    loadOptions("/colors", colorSelect);
-    loadOptions("/sizes", sizeSelect);
-    loadOptions("/fabrics", fabricSelect);
+    loadOptions("/api/colors", colorSelect);
+    loadOptions("/api/sizes", sizeSelect);
+    loadOptions("/api/fabrics", fabricSelect);
 
     // Upload image to Cloudinary
     imageInput.addEventListener("change", async function () {

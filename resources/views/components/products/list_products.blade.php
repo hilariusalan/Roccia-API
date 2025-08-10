@@ -52,7 +52,7 @@
         @forelse ($products as $product)
             <div class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden flex flex-col">
                 <div class="relative h-48 bg-gray-200">
-                    <img src="{{ $product->usage_image ?? 'https://via.placeholder.com/300' }}" alt="Product Image"
+                    <img src="{{ $product->productUsageImages->first()->image_url ?? 'https://via.placeholder.com/300' }}" alt="Product Image"
                          class="absolute inset-0 w-full h-full object-cover">
                 </div>
 

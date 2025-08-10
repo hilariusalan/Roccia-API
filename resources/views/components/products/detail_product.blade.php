@@ -67,7 +67,7 @@ document.getElementById("editVariantForm").addEventListener("submit", async func
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-10">
         <!-- Product Image -->
         <div class="w-full">
-            <img src="{{ $product->productUsageImage->url }}" alt="Product Image"
+            <img src="{{ $product->productUsageImages->first()->image_url }}" alt="Product Image"
                 class="rounded-xl w-full object-cover shadow-md">
         </div>
 

@@ -7,6 +7,7 @@ use App\Http\Requests\CollectionUpdateRequest;
 use App\Models\Collection;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CollectionWebController extends Controller
 {
@@ -18,17 +19,26 @@ class CollectionWebController extends Controller
 
     public function createCollection(CollectionCreateRequest $request)
     {
-        $data = $request->validated();
+        try {
+            $data = $request->validated();
 
-        $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+            // Upload image to Cloudinary
+            $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
 
-        Collection::create([
-            'name' => $data['name'],
-            'slug' => $data->input['slug'],
-            'image_url' => $uploadedFileUrl
-        ]);
+            // Create the collection
+            Collection::create([
+                'name' => $data['name'],
+                'slug' => $data['slug'],
+                'image_url' => $uploadedFileUrl,
+            ]);
 
-        return redirect()->route('collections.index')->with('success', 'Collection created successfully!');
+            return redirect()->route('collections.index')->with('success', 'Collection created successfully!');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Collection creation failed: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Failed to create collection. Please try again.');
+        }
     }
 
     public function editCollection(int $id) {

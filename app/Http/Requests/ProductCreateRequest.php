@@ -24,14 +24,14 @@ class ProductCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:100'],
-            'collection_id' => ['required'],
-            'type_id' => ['required'],
+            'collection_id' => ['required', 'exists:collections,id'], // Optional: Add existence check for better validation
+            'type_id' => ['required', 'exists:types,id'], // Optional: Add existence check
             'slug' => ['required', 'max:100'],
-            'price' => ['required'],
+            'price' => ['required', 'numeric', 'min:0'], // Optional: Add numeric/min for price
             'description' => ['required'],
-            'image_url' => ['required', 'max:200']
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // Validate as image file, max 2MB
         ];
-        }
+    }
 
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator) {
         throw new HttpResponseException(response([

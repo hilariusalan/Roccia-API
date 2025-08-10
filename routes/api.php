@@ -58,6 +58,7 @@ Route::get('/colors', [ColorController::class, 'getColors']);
 Route::get('/sizes', [ColorController::class, 'getSizes']);
 Route::get('/fabrics', [ColorController::class, 'getFabrics']);
 Route::get('/name', [StatusController::class, 'getStatuses']);
+Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
 
 Route::middleware(['auth:api'])->group(function() {
     Route::post('/billing-addresses/create', [BillingAddressController::class, 'createBillingAddress']);
@@ -81,7 +82,6 @@ Route::middleware(['auth:api'])->group(function() {
         Route::post('/orders/create', 'createNewOrder');
     });
 
-    // admin only required
     Route::middleware(['is_admin'])->group(function() {
         Route::controller(ProductController::class)->group(function() {
             Route::post('/products/create', 'createProduct');
@@ -99,10 +99,11 @@ Route::middleware(['auth:api'])->group(function() {
             Route::post('/collections/create', 'createCollection');
             Route::put('/collections/{collectionId}/update', 'updateCollection')->where('collectionId', '[0-9]+');
             Route::delete('/collections/{collectionId}/delete', 'deleteCollection')->where('collectionId', '[0-9]+');
-        });
-
-        Route::controller(OrderController::class)->group(function() {
-            Route::get('/orders', 'getOrders');
-        });
+        }); 
     });
+    
+});
+
+Route::controller(OrderController::class)->group(function() {
+    Route::get('/orders', 'getOrders');
 });

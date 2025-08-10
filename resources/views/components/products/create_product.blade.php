@@ -1,9 +1,9 @@
 @extends('main.main')
 
 @section('content')
-<div class="p-6 bg-white shadow-md rounded-2xl mt-10">
-    <h1 class="text-center text-3xl font-bold text-gray-800 mb-8">Create New Product</h1>
-    
+<div class="max-w-2xl mx-auto mt-10">
+    <h1 class="text-2xl font-bold mb-6">Create New Product</h1>
+
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
             {{ session('success') }}
@@ -16,144 +16,90 @@
         </div>
     @endif
 
-    <form id="product-form" class="space-y-6">
+    <form id="product-form" action="{{ route('products.create') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
+        <!-- Product Name -->
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-            <input type="text" id="name" name="name" required class="w-full border rounded-lg p-2" />
+            <label for="name" class="block text-gray-700 font-semibold mb-2">Product Name</label>
+            <input type="text" id="name" name="name" value="{{ old('name') }}"
+                class="w-full p-2 border rounded @error('name') border-red-500 @enderror" required>
+            @error('name')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- Slug -->
         <div>
-            <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-            <input type="text" id="slug" name="slug" required class="w-full border rounded-lg p-2" />
+            <label for="slug" class="block text-gray-700 font-semibold mb-2">Slug</label>
+            <input type="text" id="slug" name="slug" value="{{ old('slug') }}"
+                class="w-full p-2 border rounded @error('slug') border-red-500 @enderror" required>
+            @error('slug')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- Price -->
         <div>
-            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-            <input type="number" id="price" name="price" required class="w-full border rounded-lg p-2" />
+            <label for="price" class="block text-gray-700 font-semibold mb-2">Price</label>
+            <input type="number" id="price" name="price" value="{{ old('price') }}"
+                class="w-full p-2 border rounded @error('price') border-red-500 @enderror" required>
+            @error('price')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- Description -->
         <div>
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea id="description" name="description" required class="w-full border rounded-lg p-2"></textarea>
+            <label for="description" class="block text-gray-700 font-semibold mb-2">Description</label>
+            <textarea id="description" name="description" class="w-full p-2 border rounded @error('description') border-red-500 @enderror" required>{{ old('description') }}</textarea>
+            @error('description')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- Collection -->
         <div>
-            <label for="collection_id" class="block text-sm font-medium text-gray-700 mb-1">Collection</label>
-            <select id="collection_id" name="collection_id" required class="w-full border rounded-lg p-2">
-                <!-- Options go here -->
+            <label for="collection_id" class="block text-gray-700 font-semibold mb-2">Collection</label>
+            <select id="collection_id" name="collection_id" class="w-full p-2 border rounded @error('collection_id') border-red-500 @enderror" required>
+                <option value="" disabled selected>Select a collection</option>
+                @foreach(\App\Models\Collection::all() as $collection)
+                    <option value="{{ $collection->id }}" {{ old('collection_id') == $collection->id ? 'selected' : '' }}>{{ $collection->name }}</option>
+                @endforeach
             </select>
+            @error('collection_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- Type -->
         <div>
-            <label for="type_id" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-            <select id="type_id" name="type_id" required class="w-full border rounded-lg p-2">
-                <!-- Options go here -->
+            <label for="type_id" class="block text-gray-700 font-semibold mb-2">Type</label>
+            <select id="type_id" name="type_id" class="w-full p-2 border rounded @error('type_id') border-red-500 @enderror" required>
+                <option value="" disabled selected>Select a type</option>
+                @foreach(\App\Models\Type::all() as $type)
+                    <option value="{{ $type->id }}" {{ old('type_id') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
+                @endforeach
             </select>
+            @error('type_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- Image Upload -->
         <div>
-            <label for="image_upload" class="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
-            <input type="file" id="image_upload" accept="image/*" class="w-full border rounded-lg p-2" />
-            <input type="hidden" name="image_url" id="image_url">
-            <div id="preview-image" class="mt-2"></div>
+            <label for="image_upload" class="block text-gray-700 font-semibold mb-2">Upload Image</label>
+            <input id="image_upload" type="file" name="image" accept="image/*"
+                class="w-full p-2 border rounded @error('image') border-red-500 @enderror" required>
+            @error('image')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- Submit Button -->
         <div class="flex justify-end">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition duration-300">
-                Create Product
-            </button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create Product</button>
         </div>
     </form>
-
-    <p id="result" class="mt-6 text-sm text-gray-600"></p>
 </div>
-<script>
-    
-document.addEventListener('DOMContentLoaded', function () {
-    // Populate collections and types
-    fetch('/api/collections')
-        .then(res => res.json())
-        .then(data => {
-            const select = document.getElementById('collection_id');
-            data.data.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.id;
-                option.text = item.name;
-                select.appendChild(option);
-            });
-        });
-
-    fetch('/api/types')
-        .then(res => res.json())
-        .then(data => {
-            const select = document.getElementById('type_id');
-            data.data.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.id;
-                option.text = item.name;
-                select.appendChild(option);
-            });
-        });
-
-    // Image Upload
-    const imageInput = document.getElementById('image_upload');
-    imageInput.addEventListener('change', function () {
-        const file = this.files[0];
-        const formData = new FormData();
-        formData.append('image', file);
-
-        fetch('/upload-image', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.url) {
-                document.getElementById('image_url').value = data.url;
-                document.getElementById('preview-image').innerHTML = `
-                    <img src="${data.url}" alt="Preview" class="w-40 h-40 object-cover mt-2 rounded-lg shadow" />
-                `;
-            } else {
-                alert('Upload gagal!');
-            }
-        })
-        .catch(() => alert('Gagal mengunggah gambar'));
-    });
-
-    // Form Submit
-    const form = document.getElementById('product-form');
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const formData = new FormData(form);
-
-        fetch('/products/create', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.message) {
-                document.getElementById('result').innerText = data.message;
-                form.reset();
-                document.getElementById('preview-image').innerHTML = '';
-            } else {
-                document.getElementById('result').innerText = data.error || 'Failed to create product.';
-            }
-        })
-        .catch(err => {
-            document.getElementById('result').innerText = 'Something went wrong.';
-        });
-    });
-});
-</script>
 @endsection

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserWebController extends Controller
 {
@@ -94,6 +95,12 @@ class UserWebController extends Controller
         Auth::login($user);
 
         return redirect()->route('admin')->with('success', 'Login berhasil.');
+    }
+
+    public function logout() {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        
+        return redirect()->route('login')->with('success', 'Logout berhasil.');
     }
 
 
