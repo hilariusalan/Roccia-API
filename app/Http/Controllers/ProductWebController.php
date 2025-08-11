@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProductCreateRequest;
+use App\Http\Requests\ProductWebCreateRequest;
 use App\Models\Collection;
 use App\Models\Color;
 use App\Models\Product;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProductWebController extends Controller
 {
-    public function createProduct(ProductCreateRequest $request)
+    public function createProduct(ProductWebCreateRequest $request)
     {
         try {
             $data = $request->validated();

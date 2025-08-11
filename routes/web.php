@@ -5,6 +5,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderWebController;
 use App\Http\Controllers\ProductVariantController;
+use App\Http\Controllers\ProductVariantWebController;
 use App\Http\Controllers\ProductWebController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserWebController;
@@ -39,9 +40,9 @@ Route::delete('/logout', [UserWebController::class, 'logout'])->name('logout');
 Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
 
 Route::post('/products/create', [ProductWebController::class, 'createProduct'])->name('products.create');
-Route::get('/products', [ProductWebController::class, 'getProducts'])->name('products.index');
-Route::get('/products/{productId}/update', [ProductWebController::class, 'showProductDetail'])->name('product.detail');
-Route::delete('/products/{productId}/delete', [ProductWebController::class, 'destroy'])->name('products.destroy');
+// Route::get('/products', [ProductWebController::class, 'getProducts'])->name('products.index');
+// Route::get('/products/{productId}/update', [ProductWebController::class, 'showProductDetail'])->name('product.detail');
+// Route::delete('/products/{productId}/delete', [ProductWebController::class, 'destroy'])->name('products.destroy');
 
 Route::get('/collections', [CollectionWebController::class, 'getCollections'])->name('collections.index');
 Route::post('/collections/create', [CollectionWebController::class, 'createCollection'])->name('collections.create');
@@ -51,8 +52,7 @@ Route::get('/orders', [OrderWebController::class, 'showOrders'])->name('orders.i
 Route::get('/orders/{orderId}', [OrderWebController::class, 'showDetail'])->name('order.detail');
 Route::post('/orders/{orderId}/update-status', [OrderWebController::class, 'updateStatus'])->name('order.updateStatus');
 
-// Route::post('/products/{productId}/variants/create', [ProductVariantController::class, 'createProductVariant'])->name('variant.create');
-Route::post('/products/{productId}/variants/create', [ProductVariantController::class, 'createProductVariant'])->name('variant.create');
+Route::post('/products/{productId}/variants/create', [ProductVariantWebController::class, 'createProductVariant'])->name('variant.create');
 Route::post('/products/{productId}/variants/update', [ProductVariantController::class, 'updateProductVariant'])->name('variant.update');
 Route::post('/products/{productId}/variants/delete', [ProductVariantController::class, 'deleteProductVariant'])->name('variant.delete');
 

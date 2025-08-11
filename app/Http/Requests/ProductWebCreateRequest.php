@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ProductCreateRequest extends FormRequest
+class ProductWebCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +29,7 @@ class ProductCreateRequest extends FormRequest
             'slug' => ['required', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'], // Optional: Add numeric/min for price
             'description' => ['required'],
-            'image' => ['required', 'max:200'], // Validate as image file, max 2MB
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // Validate as image file, max 2MB
         ];
     }
 

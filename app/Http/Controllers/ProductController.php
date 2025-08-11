@@ -174,7 +174,7 @@ class ProductController extends Controller
                 'price' => (int)$product->price,
                 'description' => $product->description,
                 'variants' => ProductVariantResource::collection($productVariants),
-                'usage_image' => $product->productUsageImage->url
+                'usage_image' => $product->productUsageImage->first()->url
             ]
         ])->setStatusCode(200);
     }
@@ -219,7 +219,7 @@ class ProductController extends Controller
                     'slug' => $product->slug,
                     'price' => (int)$product->price,
                     'description' => $product->description,
-                    'image_url' => $product->productUsageImages->image_url,
+                    'image_url' => $product->productUsageImages->first()->image_url,
                     'updated_at' => $product->updated_at->format('d-m-Y'),  
                 ],
                 'isSuccess' => true
