@@ -16,14 +16,14 @@ class ProductVariantResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'color' => [
+            'color' => $this->colors ? [
                 'id' => $this->colors->id,
                 'name' => $this->colors->name,
                 'hex' => $this->colors->hex,
-            ],
-            'fabric' => $this->fabrics->name,
-            'image' => $this->image_url,
-            'price' => (int)$this->products->price,
+            ] : null,
+            'fabric' => $this->fabrics ? $this->fabrics->name : null,
+            'image_url' => $this->image_url,
+            'price' => $this->products ? (int)$this->products->price : null,
             'stock' => $this->stock
         ];
     }

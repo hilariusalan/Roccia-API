@@ -19,26 +19,25 @@ use Illuminate\Support\Facades\RateLimiter;
 
 class OrderController extends Controller
 {
-    public function getOrders(Request $request): JsonResponse {
+    public function getOrders(Request $request): JsonResponse
+    {
         $date = $request->query('date');
         $statusId = $request->query('status_id');
-        
-        $query = Order::query()
-                        ->with([
-                            'users',
-                            'statuses'
-                        ]);
 
-        if($date != null) {
-            $query->where('created_at', $date);
+        $query = Order::query()->with(['users', 'statuses']);
+
+        if ($date) {
+            $query->whereDate('created_at', $date); 
         }
 
-        if($statusId != null) {
+        if ($statusId) {
             $query->where('status_id', $statusId);
-        } 
+        }
+
+        $orders = $query->get(); 
 
         return response()->json([
-            'data' => OrderResource::collection($query)
+            'data' => OrderResource::collection($orders)
         ])->setStatusCode(200);
     }
 

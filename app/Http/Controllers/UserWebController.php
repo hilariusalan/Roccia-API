@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -97,10 +98,15 @@ class UserWebController extends Controller
         return redirect()->route('admin')->with('success', 'Login berhasil.');
     }
 
-    public function logout() {
-        JWTAuth::invalidate(JWTAuth::getToken());
-        
-        return redirect()->route('login')->with('success', 'Logout berhasil.');
+    public function logout()
+    {
+        try {
+            Auth::logout(); // Clear the session-based authentication
+            return redirect()->route('login')->with('success', 'Logout berhasil.');
+        } catch (\Exception $e) {
+            Log::error('Logout failed: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'Gagal logout. Silakan coba lagi.');
+        }
     }
 
 

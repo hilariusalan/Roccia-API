@@ -16,8 +16,8 @@ class OrderResource extends JsonResource
     {
         return [
             'order_id' => $this->id,
-            'user' => $this->users->email,
-            'status' => $this->statuses->name,
+            'user' => $this->users ? $this->users->email : null,
+            'status' => $this->statuses ? $this->statuses->name : null,
             'created_at' => $this->created_at->format('d-M-y'),
             'updated_at' => $this->updated_at->format('d-M-y')
         ];

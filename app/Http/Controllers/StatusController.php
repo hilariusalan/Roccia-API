@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StatusResource;
 use App\Models\Status;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,10 +13,7 @@ class StatusController extends Controller
         $statuses = Status::all();
 
         return response()->json([
-            'data' => [
-                'id' => $statuses->id,
-                'name' => $statuses->name
-            ]
+            'data' => StatusResource::collection($statuses)
         ]);
     }
 }

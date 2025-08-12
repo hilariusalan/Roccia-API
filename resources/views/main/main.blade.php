@@ -21,8 +21,9 @@
             </nav>
         </div>
         <div class="p-4 border-t">
-            <form method="GET" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
+                @method('DELETE')
                 <button type="submit" class="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Logout</button>
             </form>
         </div>

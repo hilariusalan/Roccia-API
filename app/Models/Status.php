@@ -14,6 +14,11 @@ class Status extends Model
     public $timestamps = true;
     public $incrementing = true;
 
+    protected $fillable = [
+      'id', 
+      'name'  
+    ];
+
     public function orders(): HasMany {
         return $this->hasMany(Status::class, "status_id", "id");
     }

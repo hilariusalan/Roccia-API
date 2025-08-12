@@ -80,7 +80,7 @@ class ProductController extends Controller
             'collections', 
             'types', 
             'productUsageImages',
-            'productVariants.color'
+            'productVariants.colors'
         ]);
 
         if($minPrice && $maxPrice != null) {
@@ -97,7 +97,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->paginate($size, ['*'], 'page', $page);
+        $products = $query->paginate($size, ['*'], 'page', $page); 
 
         return response()->json([
             'data' => ProductResource::collection($products->items()),
@@ -122,7 +122,7 @@ class ProductController extends Controller
             'collections', 
             'types', 
             'productUsageImages',
-            'productVariants.color'
+            'productVariants.colors'
         ])->where('collection_id', $collectionId);
 
         if($minPrice && $maxPrice != null) {
@@ -151,10 +151,11 @@ class ProductController extends Controller
         ])->setStatusCode(200);
     }
 
-    public function getProductDetail(int $productId): JsonResponse {
+    public function getProductDetail(int $productId): JsonResponse
+    {
         $product = Product::with(['collections', 'types', 'productUsageImages'])
-                            ->where('id', $productId)
-                            ->first();
+                         ->where('id', $productId)
+                         ->first();
 
         if (!$product) {
             throw new HttpResponseException(response()->json([
@@ -162,7 +163,9 @@ class ProductController extends Controller
             ])->setStatusCode(404));
         }
 
-        $productVariants = ProductVariant::with(['products, colors, fabrics, sizes'])->where('product_id', $productId)->get();
+        $productVariants = ProductVariant::with(['products', 'colors', 'fabrics', 'sizes'])
+                                        ->where('product_id', $productId)
+                                        ->get();
 
         return response()->json([
             'data' => [
@@ -174,7 +177,7 @@ class ProductController extends Controller
                 'price' => (int)$product->price,
                 'description' => $product->description,
                 'variants' => ProductVariantResource::collection($productVariants),
-                'usage_image' => $product->productUsageImage->first()->url
+                'usage_image' => $product->productUsageImages->isNotEmpty() ? $product->productUsageImages->first()->image_url : null
             ]
         ])->setStatusCode(200);
     }
