@@ -104,7 +104,3 @@ Route::middleware(['auth:api'])->group(function() {
     });
     
 });
-
-Route::controller(OrderController::class)->group(function() {
-    
-});

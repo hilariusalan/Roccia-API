@@ -50,6 +50,8 @@ class UserController extends Controller
     
             Mail::to($data->email)->send(new SendOtpMail($otp));
     
+            session(['email' => $data->email]);
+
             return response()->json([
                 'message' => 'Otp send successfully.',
                 'isSuccess' => true
