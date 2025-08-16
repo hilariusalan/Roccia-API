@@ -32,32 +32,32 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::controller(UserController::class)->group(function() {
-    Route::post('/auth/request-otp', 'userRequestOtp'); // done
-    Route::post('/auth/verify-otp', 'userVerifyOtp'); // done
+    Route::post('/auth/request-otp', 'userRequestOtp'); 
+    Route::post('/auth/verify-otp', 'userVerifyOtp'); 
 });
 
 Route::controller(ProductController::class)->group(function() {
-    Route::get('/products', 'getProducts'); // done
-    Route::get('/products/{productId}', 'getProductDetail')->where('productId', '[0-9]+'); // done
-    Route::get('/collections/{collectionId}/products', 'getProductsPerCollection')->where('collectionId', '[0-9]+'); // done
+    Route::get('/products', 'getProducts'); 
+    Route::get('/products/{productId}', 'getProductDetail')->whereNumber('productId'); 
+    Route::get('/collections/{collectionId}/products', 'getProductsPerCollection')->whereNumber('collectionId'); 
 });
 
 Route::controller(TypeController::class)->group(function() {
-    Route::post('/products/types/create', 'createType'); // done
-    Route::get('/products/types', 'getTypes'); // done
+    Route::post('/products/types/create', 'createType'); 
+    Route::get('/products/types', 'getTypes'); 
 });
 
 Route::controller(OrderController::class)->group(function() {
-    Route::get('/orders', 'getOrders'); // done
-    Route::get('/orders/{orderId}', 'getOrderDetail')->where('orderId', '[0-9]+'); 
+    Route::get('/orders', 'getOrders'); 
+    Route::get('/orders/{orderId}', 'getOrderDetail')->whereNumber('orderId'); 
 });
 
-Route::get('/collections', [CollectionController::class, 'getCollections']); // done
-Route::get('/names', [NameController::class, 'getAllProductCollectionNames']); // done
-Route::get('/colors', [ColorController::class, 'getColors']); // done
-Route::get('/sizes', [ColorController::class, 'getSizes']); // done
-Route::get('/fabrics', [ColorController::class, 'getFabrics']); // done
-Route::get('/statuses', [StatusController::class, 'getStatuses']); // done
+Route::get('/collections', [CollectionController::class, 'getCollections']); 
+Route::get('/names', [NameController::class, 'getAllProductCollectionNames']); 
+Route::get('/colors', [ColorController::class, 'getColors']); 
+Route::get('/sizes', [ColorController::class, 'getSizes']); 
+Route::get('/fabrics', [ColorController::class, 'getFabrics']); 
+Route::get('/statuses', [StatusController::class, 'getStatuses']); 
 
 Route::post('/image/upload', [ImageController::class, 'uploadImage'])->name('image.upload');
 
@@ -73,33 +73,33 @@ Route::middleware(['auth:api'])->group(function() {
     Route::controller(AddressController::class)->group(function() {
         Route::get('/users/addresses', 'getUserAddress');
         Route::post('/users/address/create', 'createAddress');
-        Route::put('/users/address/{addressId}/edit', 'updateUserAddress')->where('addressId', '[0-9]+');
-        Route::delete('/users/address/{addressId}/delete', 'deleteUserAddress')->where('addressId', '[0-9]+'); 
+        Route::put('/users/address/{addressId}/edit', 'updateUserAddress')->whereNumber('addressId');
+        Route::delete('/users/address/{addressId}/delete', 'deleteUserAddress')->whereNumber('addressId'); 
     });
 
     Route::controller(OrderController::class)->group(function() {
         Route::get('/users/orders', 'getUserOrders');
-        Route::get('/orders/{orderId}', 'getOrderDetail')->where('orderId', '[0-9]+');
+        Route::get('/orders/{orderId}', 'getOrderDetail')->whereNumber('orderId');
         Route::post('/orders/create', 'createNewOrder');
     });
 
     Route::middleware(['is_admin'])->group(function() {
         Route::controller(ProductController::class)->group(function() {
             Route::post('/products/create', 'createProduct');
-            Route::put('/products/{productId}/update', 'updateProduct')->where('productId', '[0-9]+');
-            Route::delete('/products/{productId}/delete', 'deleteProduct')->where('productId', '[0-9]+');
+            Route::put('/products/{productId}/update', 'updateProduct')->whereNumber('productId');
+            Route::delete('/products/{productId}/delete', 'deleteProduct')->whereNumber('productId');
         });
 
         Route::controller(ProductVariantController::class)->group(function() {
-            Route::post('/products/create/{productId}/variant', 'createProductVariant')->where('productId', '[0-9]+');
-            Route::patch('/products/update/{productVariantId}/variant', 'updateProductVariant')->where('productVariantId', '[0-9]+');
-            Route::delete('/products/delete/{productVariantId}/variant', 'deleteProductVariant')->where('productVariantId', '[0-9]+');
+            Route::post('/products/create/{productId}/variant', 'createProductVariant')->whereNumber('productId');
+            Route::patch('/products/update/{productVariantId}/variant', 'updateProductVariant')->whereNumber('productVariantId');
+            Route::delete('/products/delete/{productVariantId}/variant', 'deleteProductVariant')->whereNumber('productVariantId');
         });
 
         Route::controller(CollectionController::class)->group(function() {
             Route::post('/collections/create', 'createCollection');
-            Route::put('/collections/{collectionId}/update', 'updateCollection')->where('collectionId', '[0-9]+');
-            Route::delete('/collections/{collectionId}/delete', 'deleteCollection')->where('collectionId', '[0-9]+');
+            Route::put('/collections/{collectionId}/update', 'updateCollection')->whereNumber('collectionId');
+            Route::delete('/collections/{collectionId}/delete', 'deleteCollection')->whereNumber('collectionId');
         }); 
     });
     
