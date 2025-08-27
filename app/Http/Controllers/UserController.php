@@ -24,33 +24,33 @@ class UserController extends Controller
     public function userRequestOtp(UserRequestOtpRequest $request): JsonResponse {
         try {
             $data = $request->validated();
-    
+
             $decayMinutes = 1;
             $maxAttemps = 3;
-            $key = 'send-otp: ' . $data->email;
-    
+            $key = 'send-otp: ' . $data['email'];
+
             if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
                 $second = RateLimiter::availableIn($key);
-    
+
                 throw new HttpResponseException(response()->json([
                     'error' => 'Too many otp request. Please try again after ' . $second . ' second' 
                 ])->setStatusCode(429));
             }
-    
+
             RateLimiter::hit($key, $decayMinutes * 60);
-    
+
             $otp = rand(100000, 999999);
             $hashedOtp = Hash::make((string)$otp);
-    
+
             OtpCode::create([
-                'email' => $data->email,
+                'email' => $data['email'],
                 'otp' => $hashedOtp,
                 'expires_at' => now()->addMinutes(5)
             ]);
-    
-            Mail::to($data->email)->send(new SendOtpMail($otp));
-    
-            session(['email' => $data->email]);
+
+            Mail::to($data['email'])->send(new SendOtpMail($otp));
+
+            session(['email' => $data['email']]);
 
             return response()->json([
                 'message' => 'Otp send successfully.',
@@ -71,7 +71,7 @@ class UserController extends Controller
     
             $decayMinutes = 1;
             $maxAttemps = 3;
-            $key = 'verify-otp: ' . $data->email;
+            $key = 'verify-otp: ' . $data['email'];
     
             if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
                 $second = RateLimiter::availableIn($key);
@@ -81,7 +81,7 @@ class UserController extends Controller
                 ])->setStatusCode(429));
             }
     
-            $otpRecord = OtpCode::where('email', $data->email)
+            $otpRecord = OtpCode::where('email', $data['email'])
                                 ->where('expires_at', '>', now())
                                 ->latest()
                                 ->first();
@@ -97,7 +97,7 @@ class UserController extends Controller
             RateLimiter::clear($key);
     
             $user = User::firstOrCreate(
-                ['email' => $data->email],
+                ['email' => $data['email']],
                 ['full_name' => '', 'is_admin' => false],
             );
     
