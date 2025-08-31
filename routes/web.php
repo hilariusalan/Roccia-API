@@ -102,5 +102,20 @@ Route::middleware(['is_admin_web'])->group(function() {
     Route::post('/products/{productId}/variants/create', [ProductVariantWebController::class, 'createProductVariant'])->name('variant.create');
     Route::patch('/products/{productId}/variants/{variantId}/update', [ProductVariantWebController::class, 'updateProductVariant'])->name('variant.update');
     Route::delete('/products/{productId}/variants/{variantId}/delete', [ProductVariantWebController::class, 'deleteProductVariant'])->name('variant.delete');
+    
+});
 
+// routes/web.php atau buat file test.php di public/
+Route::get('/test-smtp', function () {
+    try {
+        $fp = fsockopen('smtp-relay.brevo.com', 587, $errno, $errstr, 30);
+        if ($fp) {
+            fclose($fp);
+            return 'Connection successful';
+        } else {
+            return "Connection failed: $errstr ($errno)";
+        }
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
 });
