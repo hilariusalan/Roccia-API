@@ -109,6 +109,18 @@ Route::middleware(['is_admin_web'])->group(function() {
     Route::patch('/products/{productId}/variants/{variantId}/update', [ProductVariantWebController::class, 'updateProductVariant'])->name('variant.update');
     Route::delete('/products/{productId}/variants/{variantId}/delete', [ProductVariantWebController::class, 'deleteProductVariant'])->name('variant.delete');
     
+    Route::get('/type/create', function() {
+        return view('components.other.components.create_type');
+    })->name('type.create');
+
+    Route::get('/color/create', function() {
+        return view('components.other.components.create_color');
+    })->name('color.create');
+
+    Route::get('/status/create', function() {
+        return view('components.other.components.create_status');
+    })->name('status.create');
+
 });
 
 // routes/web.php atau buat file test.php di public/
