@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    @vite('resources/css/app.css')
     <title>Roccia - Admin</title>
 </head>
 <body class="flex min-h-screen bg-gray-100">
@@ -20,6 +20,7 @@
                 <a href="{{ route('products.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Products</a>
                 <a href="{{ route('collections.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Collections</a>
                 <a href="{{ route('orders.index') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Orders</a>
+                <a href="{{ route('other.other') }}" class="px-4 py-2 rounded hover:bg-blue-100 text-gray-700">Others</a>
             </nav>
         </div>
         <div class="p-4 border-t">

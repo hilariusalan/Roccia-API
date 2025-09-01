@@ -30,16 +30,6 @@
             @enderror
         </div>
 
-        <!-- Slug -->
-        <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Slug</label>
-            <input type="text" name="slug" value="{{ old('slug') }}"
-                class="w-full p-2 border rounded @error('slug') border-red-500 @enderror">
-            @error('slug')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
             <!-- Image Upload -->
         <div class="mb-4">
             <label for="image_upload" class="block text-gray-700 font-semibold mb-2">Image</label>

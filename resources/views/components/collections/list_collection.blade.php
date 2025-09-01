@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="p-4 flex flex-col gap-2 flex-grow">
-                    <h5 class="text-lg font-semibold text-gray-800">{{ $collection->name }}</h5>
+                    <a href="{{ route('collections.products', ['collectionId' => $collection->id]) }}" class="text-lg font-semibold text-gray-800 hover:underline">{{ $collection->name }}</a>
                 </div>
 
                 <div class="p-4 pt-0 flex flex-col gap-2">

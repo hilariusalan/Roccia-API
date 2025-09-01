@@ -85,7 +85,7 @@ document.getElementById("editVariantForm").addEventListener("submit", async func
 
         <!-- Product Info -->
         <div class="flex flex-col gap-4">
-            <h2 class="text-2xl font-bold text-gray-800">Product Name</h2>
+            <h2 class="text-2xl font-bold text-gray-800">{{ $product->name }}</h2>
 
             <div class="flex gap-2 flex-wrap">
                 <span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full border border-blue-400">

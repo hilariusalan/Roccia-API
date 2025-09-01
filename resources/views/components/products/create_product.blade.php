@@ -29,16 +29,6 @@
             @enderror
         </div>
 
-        <!-- Slug -->
-        <div>
-            <label for="slug" class="block text-gray-700 font-semibold mb-2">Slug</label>
-            <input type="text" id="slug" name="slug" value="{{ old('slug') }}"
-                class="w-full p-2 border rounded @error('slug') border-red-500 @enderror" required>
-            @error('slug')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
         <!-- Price -->
         <div>
             <label for="price" class="block text-gray-700 font-semibold mb-2">Price</label>

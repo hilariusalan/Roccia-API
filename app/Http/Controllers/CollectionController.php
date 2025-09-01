@@ -19,7 +19,7 @@ class CollectionController extends Controller
     public function createCollection(CollectionCreateRequest $request): JsonResponse {
         try {
             $user = Auth::user();
-    
+     
             $decayMinutes = 1;
             $maxAttempts = 3;
             $key = 'create-collection: ' . $user->email;

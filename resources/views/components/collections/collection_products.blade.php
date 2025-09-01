@@ -3,26 +3,9 @@
 @section('content')
 <div class="container mx-auto px-6 py-10">
     <div class="flex flex-col md:flex-row justify-between items-center mb-10">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4 md:mb-0">My Products</h1>
+        <h1 class="text-4xl font-bold text-gray-800 mb-4 md:mb-0">Products of Collection: <span class="underline">{{ $collectionName }}</span></h1>
 
-        <form method="GET" action="{{ route('products.index') }}" class="flex flex-col sm:flex-row items-center gap-4">
-            <div class="relative w-full sm:w-auto">
-                <select id="collection-filter" name="collection" onchange="this.form.submit()"
-                        class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow">
-                    <option value="">All Collections</option>
-                    @foreach ($collections as $collection)
-                        <option value="{{ $collection->id }}" {{ request('collection') == $collection->id ? 'selected' : '' }}>
-                            {{ $collection->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                    </svg>
-                </div>
-            </div>
-
+        <form method="GET" action="{{ route('collections.products', ['collectionId' => $collectionId]) }}" class="flex flex-col sm:flex-row items-center gap-4">
             <div class="relative w-full sm:w-auto">
                 <select id="type-filter" name="type" onchange="this.form.submit()"
                         class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow">
@@ -39,11 +22,6 @@
                     </svg>
                 </div>
             </div>
-
-            <a href="{{ route('create-product') }}"
-               class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow transition-all duration-200 text-center">
-                + Add New Product
-            </a>
         </form>
     </div>
 
@@ -93,6 +71,4 @@
     <div class="mt-10">
         {{ $products->links() }}
     </div>
-
-</div>
 @endsection

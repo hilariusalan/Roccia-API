@@ -12,6 +12,7 @@ use App\Models\Type;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Str;
 
 class ProductWebController extends Controller
 {
@@ -33,7 +34,7 @@ class ProductWebController extends Controller
                 'name' => $data['name'],
                 'collection_id' => $data['collection_id'],
                 'type_id' => $data['type_id'],
-                'slug' => $data['slug'],
+                'slug' => Str::slug($data['name']),
                 'price' => $data['price'],
                 'description' => $data['description'],
             ]);
@@ -114,5 +115,5 @@ class ProductWebController extends Controller
             'variants' => $variants
         ]);
     }
-
+ 
 }

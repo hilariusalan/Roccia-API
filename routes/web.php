@@ -7,6 +7,7 @@ use App\Http\Controllers\OrderWebController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProductVariantWebController;
 use App\Http\Controllers\ProductWebController;
+use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserWebController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,10 @@ Route::get('/verify', function() {
     return view('auth.verif');
 })->name('verify');
 
+Route::get('/other', function() {
+    return view('components.other.other');
+})->name('other.other');
+
 // controller base
 Route::post('/auth-verif', [UserWebController::class, 'userRequestOtpBlade'])->name('auth-verif');
 Route::post('/auth-verify-otp', [UserWebController::class, 'userVerifyOtpBlade'])->name('auth-verify-otp');
@@ -40,6 +45,7 @@ Route::get('/products', [ProductWebController::class, 'getProducts'])->name('pro
 Route::get('/products/{productId}', [ProductWebController::class, 'showProductDetail'])->name('product.detail');
 
 Route::get('/collections', [CollectionWebController::class, 'getCollections'])->name('collections.index');
+Route::get('/collections/{collectionId}/products', [CollectionWebController::class, 'getProductsPerCollection'])->name('collections.products');
 
 Route::get('/orders', [OrderWebController::class, 'showOrders'])->name('orders.index');
 

@@ -5,16 +5,41 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CollectionCreateRequest;
 use App\Http\Requests\CollectionUpdateRequest;
 use App\Models\Collection;
+use App\Models\Product;
+use App\Models\Type;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Str;
 
 class CollectionWebController extends Controller
 {
     public function getCollections() {
         $collections = Collection::all();
 
-        return view('components.collections.list_collection', compact('collections'));
+        return view('components.collections.list_collection ', compact('collections'));
+    }
+
+    public function getProductsPerCollection(int $collectionId, Request $request) {
+        $typeId = $request->query('type');
+
+        $query = Product::query()->with([
+            'collections', 
+            'types', 
+            'productUsageImages',
+            'productVariants.colors'
+        ])->where('collection_id', $collectionId);
+
+        if($typeId) {
+            $query->where('type_id', $typeId);
+        }
+
+        $products = $query->paginate(12);
+
+        $types = Type::all();
+        $collectionName = Collection::where('id', $collectionId)->first()->name;
+
+        return view('components.collections.collection_products', compact('products', 'types', 'collectionId', 'collectionName'));
     }
 
     public function createCollection(CollectionCreateRequest $request)
@@ -28,7 +53,7 @@ class CollectionWebController extends Controller
             // Create the collection
             Collection::create([
                 'name' => $data['name'],
-                'slug' => $data['slug'],
+                'slug' => Str::slug($data['name']),
                 'image_url' => $uploadedFileUrl,
             ]);
 
