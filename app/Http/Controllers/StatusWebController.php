@@ -22,4 +22,10 @@ class StatusWebController extends Controller
             return redirect()->back()->with('error', 'Failed to create status. Please try again.');
         } 
     }
+
+    public function getStatuses() {
+        $statuses = Status::all();
+
+        return view('components.other.components.status.list_status', compact('statuses'));
+    }
 }

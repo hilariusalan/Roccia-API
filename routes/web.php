@@ -94,15 +94,15 @@ Route::middleware(['is_admin_web'])->group(function() {
     })->name('detail-order');
 
     Route::get('/status-create', function() {
-        return view('components.other.components.create_status');
+        return view('components.other.components.status.create_status');
     })->name('create-status');
 
     Route::get('/type-create', function() {
-        return view('components.other.components.create_type');
+        return view('components.other.components.type.create_type');
     })->name('create-type');
 
     Route::get('/color-create', function() {
-        return view('components.other.components.create_color');
+        return view('components.other.components.color.create_color');
     })->name('create-color');
 
     // controller base
@@ -124,9 +124,12 @@ Route::middleware(['is_admin_web'])->group(function() {
     Route::delete('/products/{productId}/variants/{variantId}/delete', [ProductVariantWebController::class, 'deleteProductVariant'])->name('variant.delete');
     
     Route::post('/type/create', [TypeWebController::class, 'createType'])->name('type.create');
+    Route::get('/type/get', [TypeWebController::class, 'getTypes'])->name('type.get');
 
     Route::post('/color/create', [ColorWebController::class, 'createColor'])->name('color.create');
+    Route::get('/colors/get', [ColorWebController::class, 'getColors'])->name('colors.get');
 
     Route::post('/status/create', [StatusWebController::class, 'createStatus'])->name('status.create');
+    Route::get('/status/get', [StatusWebController::class, 'getStatuses'])->name('status.get');
 
 });

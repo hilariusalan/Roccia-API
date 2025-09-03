@@ -23,4 +23,10 @@ class TypeWebController extends Controller
             return redirect()->back()->with('error', 'Failed to create type. Please try again.');
         } 
     }
+
+    public function getTypes() {
+        $types = Type::all();
+
+        return view('components.other.components.type.list_type', compact('types'));
+    }
 }

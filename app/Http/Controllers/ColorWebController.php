@@ -22,4 +22,10 @@ class ColorWebController extends Controller
             return redirect()->back()->with('error', 'Failed to create color. Please try again.');
         } 
     }
+
+    public function getColors() {
+        $colors = Color::all();
+
+        return view('components.other.components.color.list_color', compact('colors'));
+    }
 }
