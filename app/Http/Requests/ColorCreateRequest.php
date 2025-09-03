@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class TypeAddRequest extends FormRequest
+class ColorCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,8 @@ class TypeAddRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:50']
+            'name' => ['required', 'max:50'],
+            'hex' => ['required', 'max:50']
         ];
     }
 

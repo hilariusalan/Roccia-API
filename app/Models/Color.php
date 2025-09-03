@@ -13,6 +13,10 @@ class Color extends Model
     protected $keyType = "int";
     public $timestamps = true;
     public $incrementing = true;
+    protected $fillable = [
+        'name',
+        'hex'
+    ];
 
     public function productVariants(): HasMany {
         return $this->hasMany(ProductVariant::class, "color_id", "id");

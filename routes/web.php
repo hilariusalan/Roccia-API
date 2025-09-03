@@ -1,13 +1,17 @@
 <?php
 
 use App\Http\Controllers\CollectionWebController;
+use App\Http\Controllers\ColorWebController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderWebController;
+use App\Http\Controllers\OtherWebController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProductVariantWebController;
 use App\Http\Controllers\ProductWebController;
+use App\Http\Controllers\StatusWebController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\TypeWebController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserWebController;
 use Illuminate\Support\Facades\Route;
@@ -33,9 +37,7 @@ Route::get('/verify', function() {
     return view('auth.verif');
 })->name('verify');
 
-Route::get('/other', function() {
-    return view('components.other.other');
-})->name('other.other');
+Route::get('/other', [OtherWebController::class, 'counter'])->name('other.other');
 
 // controller base
 Route::post('/auth-verif', [UserWebController::class, 'userRequestOtpBlade'])->name('auth-verif');
@@ -91,6 +93,18 @@ Route::middleware(['is_admin_web'])->group(function() {
         return view('components.orders.detail_order');
     })->name('detail-order');
 
+    Route::get('/status-create', function() {
+        return view('components.other.components.create_status');
+    })->name('create-status');
+
+    Route::get('/type-create', function() {
+        return view('components.other.components.create_type');
+    })->name('create-type');
+
+    Route::get('/color-create', function() {
+        return view('components.other.components.create_color');
+    })->name('create-color');
+
     // controller base
     Route::delete('/logout', [UserWebController::class, 'logout'])->name('logout');
 
@@ -109,31 +123,10 @@ Route::middleware(['is_admin_web'])->group(function() {
     Route::patch('/products/{productId}/variants/{variantId}/update', [ProductVariantWebController::class, 'updateProductVariant'])->name('variant.update');
     Route::delete('/products/{productId}/variants/{variantId}/delete', [ProductVariantWebController::class, 'deleteProductVariant'])->name('variant.delete');
     
-    Route::get('/type/create', function() {
-        return view('components.other.components.create_type');
-    })->name('type.create');
+    Route::post('/type/create', [TypeWebController::class, 'createType'])->name('type.create');
 
-    Route::get('/color/create', function() {
-        return view('components.other.components.create_color');
-    })->name('color.create');
+    Route::post('/color/create', [ColorWebController::class, 'createColor'])->name('color.create');
 
-    Route::get('/status/create', function() {
-        return view('components.other.components.create_status');
-    })->name('status.create');
+    Route::post('/status/create', [StatusWebController::class, 'createStatus'])->name('status.create');
 
-});
-
-// routes/web.php atau buat file test.php di public/
-Route::get('/test-smtp', function () {
-    try {
-        $fp = fsockopen('smtp-relay.brevo.com', 587, $errno, $errstr, 30);
-        if ($fp) {
-            fclose($fp);
-            return 'Connection successful';
-        } else {
-            return "Connection failed: $errstr ($errno)";
-        }
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
 });

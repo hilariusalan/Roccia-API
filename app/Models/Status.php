@@ -15,7 +15,6 @@ class Status extends Model
     public $incrementing = true;
 
     protected $fillable = [
-      'id', 
       'name'  
     ];
 
