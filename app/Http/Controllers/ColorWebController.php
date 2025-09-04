@@ -28,4 +28,11 @@ class ColorWebController extends Controller
 
         return view('components.other.components.color.list_color', compact('colors'));
     }
+
+    public function deleteColor(int $colorId) {
+        $type = Color::findOrFail($colorId);
+        $type->delete();
+
+        return redirect()->route('colors.get')->with('success', 'Color deleted!');
+    }
 }

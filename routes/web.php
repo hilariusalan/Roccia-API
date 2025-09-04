@@ -123,13 +123,23 @@ Route::middleware(['is_admin_web'])->group(function() {
     Route::patch('/products/{productId}/variants/{variantId}/update', [ProductVariantWebController::class, 'updateProductVariant'])->name('variant.update');
     Route::delete('/products/{productId}/variants/{variantId}/delete', [ProductVariantWebController::class, 'deleteProductVariant'])->name('variant.delete');
     
-    Route::post('/type/create', [TypeWebController::class, 'createType'])->name('type.create');
-    Route::get('/type/get', [TypeWebController::class, 'getTypes'])->name('type.get');
+    Route::controller(TypeWebController::class)->group(function() {
+        Route::post('/type/create', 'createType')->name('type.create');
+        Route::get('/type/get', 'getTypes')->name('type.get');
+        Route::delete('/type/{typeId}/delete', 'deleteType')->name('type.delete');
+    });
 
-    Route::post('/color/create', [ColorWebController::class, 'createColor'])->name('color.create');
-    Route::get('/colors/get', [ColorWebController::class, 'getColors'])->name('colors.get');
+    Route::controller(ColorWebController::class)->group(function() {
+        Route::post('/color/create', 'createColor')->name('color.create');
+        Route::get('/colors/get', 'getColors')->name('colors.get');
+        Route::delete('/color/{colorId}/delete', 'deleteColor')->name('color.delete');
+    });
 
-    Route::post('/status/create', [StatusWebController::class, 'createStatus'])->name('status.create');
-    Route::get('/status/get', [StatusWebController::class, 'getStatuses'])->name('status.get');
+    Route::controller(StatusWebController::class)->group(function() {
+        Route::post('/status/create', 'createStatus')->name('status.create');
+        Route::get('/status/get', 'getStatuses')->name('status.get');
+        Route::delete('/status{statusId}/delete', 'deleteStatus')->name('status.delete');
+    });
+
 
 });

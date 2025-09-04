@@ -28,4 +28,11 @@ class StatusWebController extends Controller
 
         return view('components.other.components.status.list_status', compact('statuses'));
     }
+
+    public function deleteStatus(int $statusId) {
+        $status = Status::findOrFail($statusId);
+        $status->delete();
+
+        return redirect()->route('status.get')->with('success', 'Status deleted!');
+    }
 }

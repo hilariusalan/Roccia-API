@@ -29,4 +29,11 @@ class TypeWebController extends Controller
 
         return view('components.other.components.type.list_type', compact('types'));
     }
+
+    public function deleteType(int $typeId) {
+        $type = Type::findOrFail($typeId);
+        $type->delete();
+
+        return redirect()->route('type.get')->with('success', 'Type deleted!');
+    }
 }

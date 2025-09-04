@@ -9,7 +9,9 @@
                 <div class="w-1/3 flex justify-between">
                     <h1 class="text-xl, font-medium">{{ $status->name }}</h1>
                 </div>
-                <form action="{{ route('create-type') }}">
+                <form action="{{ route('status.delete', ['statusId' => $status->id]) }}" method="post" onsubmit="return confirm('Apakah Anda yakin ingin menghapus status ini?');">
+                    @csrf
+                    @method('DELETE')
                     <button href="" class="bg-red-600 hover:bg-red-700 transition duration-300 rounded-md px-7 py-1 text-white font-semibold">Delete</button>
                 </form>
             </div>
