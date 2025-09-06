@@ -25,7 +25,6 @@ class ColorWebController extends Controller
 
     public function getColors() {
         $colors = Color::all();
-
         return view('components.other.components.color.list_color', compact('colors'));
     }
 
