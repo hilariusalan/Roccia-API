@@ -27,7 +27,7 @@ class ProductVariantWebCreateRequest extends FormRequest
             'fabric_id' => ['nullable', 'exists:fabrics,id'],
             'size_id' => ['nullable', 'exists:sizes,id'],
             'stock' => ['required', 'integer', 'min:0'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], 
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:4096'], 
         ];
     }
 

@@ -28,7 +28,7 @@ class ProductWebCreateRequest extends FormRequest
             'type_id' => ['required', 'exists:types,id'], // Optional: Add existence check
             'price' => ['required', 'numeric', 'min:0'], // Optional: Add numeric/min for price
             'description' => ['required'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // Validate as image file, max 2MB
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:4096'], // Validate as image file, max 2MB
         ];
     }
 
