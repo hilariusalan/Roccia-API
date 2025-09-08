@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -68,6 +69,8 @@ class UserController extends Controller
     public function userVerifyOtp(UserVerivyOtpRequest $request): JsonResponse {
         try {
             $data = $request->validated();
+
+            Log::info('Verify OTP request data:', $data); // Log input
     
             $decayMinutes = 1;
             $maxAttemps = 3;
@@ -86,7 +89,7 @@ class UserController extends Controller
                                 ->latest()
                                 ->first();
     
-            if (!$otpRecord || !Hash::check((string)$data->otp, $otpRecord->otp)) {
+            if (!$otpRecord || !Hash::check((string)$data['otp'], $otpRecord->otp)) {
                 RateLimiter::hit($key, $decayMinutes * 60);
     
                 throw new HttpResponseException(response()->json([
