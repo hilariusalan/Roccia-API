@@ -25,7 +25,7 @@ class UserWebController extends Controller
             'email' => 'required|email'
         ]);
 
-        $email = $request->email;
+        $email = $request['email'];
 
         // Rate limit
         $key = 'send-otp:' . $email;
