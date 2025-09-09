@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Mail\SendOtpMail;
 use App\Models\OtpCode;
 use App\Models\User;
+use Brevo\Client\Api\TransactionalEmailsApi;
+use Brevo\Client\Configuration;
+use Brevo\Client\Model\SendSmtpEmail;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -44,14 +48,30 @@ class UserWebController extends Controller
             'expires_at' => now()->addMinutes(5),
         ]);
 
-        // Kirim OTP lewat email
-        Mail::to($email)->send(new SendOtpMail($otp));
+        // Send OTP via Brevo API
+        $config = Configuration::getDefaultConfiguration()->setApiKey('api-key', env('BREVO_API_KEY'));
+        $apiInstance = new TransactionalEmailsApi(null, $config);
+        $sendSmtpEmail = new SendSmtpEmail([
+            'to' => [['email' => $email, 'name' => '']],
+            'sender' => ['email' => env('MAIL_FROM_ADDRESS', 'roccialiving@gmail.com'), 'name' => env('MAIL_FROM_NAME', 'Roccia Living')],
+            'subject' => 'Kode Verifikasi Otp Anda',
+            'htmlContent' => view('emails.otp', ['otp' => $otp])->render(),
+        ]);
 
-        // Simpan email di session agar bisa dipakai di verifikasi
+        try {
+            $apiInstance->sendTransacEmail($sendSmtpEmail);
+            Log::info('OTP email sent successfully to ' . $email);
+        } catch (Exception $e) {
+            Log::error('Failed to send OTP email: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['email' => 'Gagal mengirim OTP. Silakan coba lagi.']);
+        }
+
+        // Store email in session for verification
         session(['email' => $email]);
 
         return redirect()->route('verify')->with('success', 'OTP telah dikirim ke email Anda.');
     }
+
 
     public function userVerifyOtpBlade(Request $request)
     {

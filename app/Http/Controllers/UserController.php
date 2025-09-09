@@ -9,6 +9,9 @@ use App\Http\Resources\UserResource;
 use App\Mail\SendOtpMail;
 use App\Models\OtpCode;
 use App\Models\User;
+use Brevo\Client\Api\TransactionalEmailsApi;
+use Brevo\Client\Configuration;
+use Brevo\Client\Model\SendSmtpEmail;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
@@ -22,19 +25,20 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-    public function userRequestOtp(UserRequestOtpRequest $request): JsonResponse {
+    public function userRequestOtp(UserRequestOtpRequest $request): JsonResponse
+    {
         try {
             $data = $request->validated();
 
             $decayMinutes = 1;
-            $maxAttemps = 3;
-            $key = 'send-otp: ' . $data['email'];
+            $maxAttempts = 3;
+            $key = 'send-otp:' . $data['email'];
 
-            if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
+            if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
                 $second = RateLimiter::availableIn($key);
 
                 throw new HttpResponseException(response()->json([
-                    'error' => 'Too many otp request. Please try again after ' . $second . ' second' 
+                    'error' => 'Too many OTP requests. Please try again after ' . $second . ' seconds'
                 ])->setStatusCode(429));
             }
 
@@ -49,65 +53,78 @@ class UserController extends Controller
                 'expires_at' => now()->addMinutes(5)
             ]);
 
-            Mail::to($data['email'])->send(new SendOtpMail($otp));
+            // Send OTP via Brevo API
+            $config = Configuration::getDefaultConfiguration()->setApiKey('api-key', env('BREVO_API_KEY'));
+            $apiInstance = new TransactionalEmailsApi(null, $config);
+            $sendSmtpEmail = new SendSmtpEmail([
+                'to' => [['email' => $data['email'], 'name' => '']],
+                'sender' => ['email' => env('MAIL_FROM_ADDRESS', 'roccialiving@gmail.com'), 'name' => env('MAIL_FROM_NAME', 'Roccia Living')],
+                'subject' => 'Kode Verifikasi Otp Anda',
+                'htmlContent' => view('emails.otp', ['otp' => $otp])->render(),
+            ]);
+
+            $apiInstance->sendTransacEmail($sendSmtpEmail);
+            Log::info('OTP email sent successfully to ' . $data['email']);
 
             session(['email' => $data['email']]);
 
             return response()->json([
-                'message' => 'Otp send successfully.',
+                'message' => 'OTP sent successfully.',
                 'isSuccess' => true
             ])->setStatusCode(200);
         } catch (Exception $ex) {
+            Log::error('Failed to send OTP email: ' . $ex->getMessage());
             throw new HttpResponseException(response()->json([
                 'error' => 'Something went wrong.',
                 'message' => $ex->getMessage(),
                 'isSuccess' => false
             ])->setStatusCode(500));
-        } 
+        }
     }
 
-    public function userVerifyOtp(UserVerivyOtpRequest $request): JsonResponse {
+    public function userVerifyOtp(UserVerivyOtpRequest $request): JsonResponse
+    {
         try {
             $data = $request->validated();
 
-            Log::info('Verify OTP request data:', $data); // Log input
-    
+            Log::info('Verify OTP request data:', $data);
+
             $decayMinutes = 1;
-            $maxAttemps = 3;
-            $key = 'verify-otp: ' . $data['email'];
-    
-            if (RateLimiter::tooManyAttempts($key, $maxAttemps)) {
+            $maxAttempts = 3;
+            $key = 'verify-otp:' . $data['email'];
+
+            if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
                 $second = RateLimiter::availableIn($key);
-    
+
                 throw new HttpResponseException(response()->json([
-                    'error' => 'Too many verification attemps. Please try again after ' . $second . ' second'
+                    'error' => 'Too many verification attempts. Please try again after ' . $second . ' seconds'
                 ])->setStatusCode(429));
             }
-    
+
             $otpRecord = OtpCode::where('email', $data['email'])
                                 ->where('expires_at', '>', now())
                                 ->latest()
                                 ->first();
-    
+
             if (!$otpRecord || !Hash::check((string)$data['otp'], $otpRecord->otp)) {
                 RateLimiter::hit($key, $decayMinutes * 60);
-    
+
                 throw new HttpResponseException(response()->json([
-                    'message' => 'Otp is not valid.'
+                    'message' => 'OTP is not valid.'
                 ])->setStatusCode(403));
             }
-    
+
             RateLimiter::clear($key);
-    
+
             $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 ['full_name' => '', 'is_admin' => false],
             );
-    
+
             $otpRecord->delete();
-    
+
             $token = JWTAuth::fromUser($user);
-    
+
             return response()->json([
                 'message' => 'Login successfully.',
                 'data' => [
@@ -124,7 +141,7 @@ class UserController extends Controller
                 'message' => $ex->getMessage(),
                 'isSuccess' => false
             ])->setStatusCode(500));
-        } 
+        }
     }
 
     public function getUserData(): JsonResponse {
