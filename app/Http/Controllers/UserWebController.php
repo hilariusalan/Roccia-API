@@ -63,7 +63,7 @@ class UserWebController extends Controller
             Log::info('OTP email sent successfully to ' . $email);
         } catch (Exception $e) {
             Log::error('Failed to send OTP email: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['email' => 'Gagal mengirim OTP. Silakan coba lagi.']);
+            return redirect()->back()->withErrors(['email' => 'Gagal mengirim otp ' . $e->getMessage()]);
         }
 
         // Store email in session for verification
