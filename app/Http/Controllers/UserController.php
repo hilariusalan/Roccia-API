@@ -57,7 +57,7 @@ class UserController extends Controller
             $config = Configuration::getDefaultConfiguration()->setApiKey('api-key', env('BREVO_API_KEY'));
             $apiInstance = new TransactionalEmailsApi(null, $config);
             $sendSmtpEmail = new SendSmtpEmail([
-                'to' => [['email' => $data['email'], 'name' => '']],
+                'to' => [['email' => $data['email']]],
                 'sender' => ['email' => env('MAIL_FROM_ADDRESS', 'roccialiving@gmail.com'), 'name' => env('MAIL_FROM_NAME', 'Roccia Living')],
                 'subject' => 'Kode Verifikasi Otp Anda',
                 'htmlContent' => view('emails.otp', ['otp' => $otp])->render(),
